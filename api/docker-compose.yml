@@ -2,74 +2,74 @@
 # For development with npm run dev, use: docker-compose -f docker-compose.dev.yml up -d
 
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: learning-platform-db
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: learning_platform
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./resources/db/init:/docker-entrypoint-initdb.d
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - internal
+    postgres:
+        image: postgres:16-alpine
+        container_name: learning-platform-db
+        restart: unless-stopped
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+            POSTGRES_DB: learning_platform
+        ports:
+            - "5432:5432"
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+            - ./resources/db/init:/docker-entrypoint-initdb.d
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+        networks:
+            - internal
 
-  postgrest:
-    image: postgrest/postgrest:latest
-    container_name: learning-platform-postgrest
-    restart: unless-stopped
-    # NO PORT MAPPING - Only accessible within Docker network (Production)
-    expose:
-      - "3000"  # Exposed to internal network only, NOT to host
-    environment:
-      PGRST_DB_URI: postgres://postgres:postgres@postgres:5432/learning_platform
-      PGRST_DB_ANON_ROLE: postgres
-      PGRST_DB_SCHEMA: public
-      PGRST_OPENAPI_SERVER_PROXY_URI: http://localhost:3000
-      PGRST_SERVER_PORT: 3000
-    depends_on:
-      postgres:
-        condition: service_healthy
-    networks:
-      - internal
+    postgrest:
+        image: postgrest/postgrest:latest
+        container_name: learning-platform-postgrest
+        restart: unless-stopped
+        # NO PORT MAPPING - Only accessible within Docker network (Production)
+        expose:
+            - "3000" # Exposed to internal network only, NOT to host
+        environment:
+            PGRST_DB_URI: postgres://postgres:postgres@postgres:5432/learning_platform
+            PGRST_DB_ANON_ROLE: postgres
+            PGRST_DB_SCHEMA: public
+            PGRST_OPENAPI_SERVER_PROXY_URI: http://localhost:3000
+            PGRST_SERVER_PORT: 3000
+        depends_on:
+            postgres:
+                condition: service_healthy
+        networks:
+            - internal
 
-  express:
-    build: .
-    container_name: learning-platform-express
-    restart: unless-stopped
-    ports:
-      - "4000:4000"  # Only Express exposed to host
-    environment:
-      DB_HOST: postgres
-      DB_PORT: 5432
-      DB_NAME: learning_platform
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      POSTGREST_URL: http://learning-platform-postgrest:3000
-      PORT: 4000
-      NODE_ENV: production
-    depends_on:
-      postgres:
-        condition: service_healthy
-      postgrest:
-        condition: service_started
-    networks:
-      - internal
-    volumes:
-      - ./src:/app/src:ro  # Mount source for development (optional)
+    express:
+        build: .
+        container_name: learning-platform-express
+        restart: unless-stopped
+        ports:
+            - "4000:4000" # Only Express exposed to host
+        environment:
+            DB_HOST: postgres
+            DB_PORT: 5432
+            DB_NAME: learning_platform
+            DB_USER: postgres
+            DB_PASSWORD: postgres
+            POSTGREST_URL: http://learning-platform-postgrest:3000
+            PORT: 4000
+            NODE_ENV: production
+        depends_on:
+            postgres:
+                condition: service_healthy
+            postgrest:
+                condition: service_started
+        networks:
+            - internal
+        volumes:
+            - ./src:/app/src:ro # Mount source for development (optional)
 
 volumes:
-  postgres_data:
+    postgres_data:
 
 networks:
-  internal:
-    driver: bridge
+    internal:
+        driver: bridge

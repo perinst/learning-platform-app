@@ -23,12 +23,14 @@ resources/
 ### 🔄 Path Updates
 
 **Before:**
+
 ```bash
 .\resources\dev-start.bat
 .\resources\prod-start.bat
 ```
 
 **After:**
+
 ```bash
 .\resources\scripts\dev-start.bat
 .\resources\scripts\prod-start.bat
@@ -52,6 +54,7 @@ All documentation has been updated with the new paths:
 ## New Usage
 
 ### Development Mode
+
 ```bash
 # From project root
 .\resources\scripts\dev-start.bat
@@ -61,6 +64,7 @@ npm run dev
 ```
 
 ### Production Mode
+
 ```bash
 # From project root
 .\resources\scripts\prod-start.bat
@@ -93,23 +97,25 @@ learning-platform-api/
 
 ## Quick Reference
 
-| Task | Command |
-|------|---------|
-| **Start Dev Mode** | `.\resources\scripts\dev-start.bat` |
-| **Start Prod Mode** | `.\resources\scripts\prod-start.bat` |
-| **Run Express (Dev)** | `npm run dev` |
-| **View Logs** | `docker-compose logs -f` |
-| **Stop Services** | `docker-compose down` |
+| Task                  | Command                              |
+| --------------------- | ------------------------------------ |
+| **Start Dev Mode**    | `.\resources\scripts\dev-start.bat`  |
+| **Start Prod Mode**   | `.\resources\scripts\prod-start.bat` |
+| **Run Express (Dev)** | `npm run dev`                        |
+| **View Logs**         | `docker-compose logs -f`             |
+| **Stop Services**     | `docker-compose down`                |
 
 ## Migration Notes
 
 If you have existing aliases or shortcuts pointing to the old paths, update them:
 
 ### Windows Shortcuts
+
 - Old: `.\resources\dev-start.bat`
 - New: `.\resources\scripts\dev-start.bat`
 
 ### Terminal Aliases (PowerShell Profile)
+
 ```powershell
 # Old
 Set-Alias dev 'C:\path\to\project\resources\dev-start.bat'
@@ -119,12 +125,14 @@ Set-Alias dev 'C:\path\to\project\resources\scripts\dev-start.bat'
 ```
 
 ### NPM Scripts
+
 Package.json scripts are **not affected** as they use docker-compose directly:
+
 ```json
 {
-  "dev:setup": "docker-compose -f docker-compose.dev.yml up -d && npm run dev",
-  "docker:dev": "docker-compose -f docker-compose.dev.yml up -d",
-  "docker:prod": "docker-compose up --build -d"
+    "dev:setup": "docker-compose -f docker-compose.dev.yml up -d && npm run dev",
+    "docker:dev": "docker-compose -f docker-compose.dev.yml up -d",
+    "docker:prod": "docker-compose up --build -d"
 }
 ```
 

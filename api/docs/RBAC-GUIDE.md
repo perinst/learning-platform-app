@@ -9,6 +9,7 @@ This API uses **PostgreSQL-based token authentication** with role-based access c
 ### 1. Login & Get Token
 
 **Request:**
+
 ```bash
 curl -X POST http://localhost:4000/rpc/verify_login \
   -H "Content-Type: application/json" \
@@ -19,17 +20,18 @@ curl -X POST http://localhost:4000/rpc/verify_login \
 ```
 
 **Response:**
+
 ```json
 [
-  {
-    "user_id": "uuid-here",
-    "user_email": "admin@example.com",
-    "user_name": "Admin User",
-    "user_role": "admin",
-    "user_created_at": "2024-01-01T00:00:00Z",
-    "access_token": "dGVzdC50b2tlbi5oZXJl...base64-encoded-token",
-    "expires_at": "2024-10-27T00:00:00Z"
-  }
+    {
+        "user_id": "uuid-here",
+        "user_email": "admin@example.com",
+        "user_name": "Admin User",
+        "user_role": "admin",
+        "user_created_at": "2024-01-01T00:00:00Z",
+        "access_token": "dGVzdC50b2tlbi5oZXJl...base64-encoded-token",
+        "expires_at": "2024-10-27T00:00:00Z"
+    }
 ]
 ```
 
@@ -48,15 +50,16 @@ curl -X POST http://localhost:4000/rpc/verify_token \
 ```
 
 **Response:**
+
 ```json
 [
-  {
-    "user_id": "uuid",
-    "user_email": "admin@example.com",
-    "user_name": "Admin User",
-    "user_role": "admin",
-    "token_expires_at": "2024-10-27T00:00:00Z"
-  }
+    {
+        "user_id": "uuid",
+        "user_email": "admin@example.com",
+        "user_name": "Admin User",
+        "user_role": "admin",
+        "token_expires_at": "2024-10-27T00:00:00Z"
+    }
 ]
 ```
 
@@ -73,8 +76,9 @@ curl -X POST http://localhost:4000/rpc/logout \
 ```
 
 **Response:**
+
 ```json
-true  // Token invalidated
+true // Token invalidated
 ```
 
 ---
@@ -83,9 +87,9 @@ true  // Token invalidated
 
 ### User Roles
 
-| Role | Access Level |
-|------|--------------|
-| `user` | Read lessons, manage own progress & chat |
+| Role    | Access Level                                                   |
+| ------- | -------------------------------------------------------------- |
+| `user`  | Read lessons, manage own progress & chat                       |
 | `admin` | Full access: Create/Edit/Delete lessons + all user permissions |
 
 ---
@@ -110,24 +114,26 @@ curl -X POST http://localhost:4000/rpc/create_lesson \
 ```
 
 **Response (Success):**
+
 ```json
 [
-  {
-    "lesson_id": "new-uuid",
-    "lesson_title": "Advanced React Patterns",
-    "lesson_description": "Learn advanced React patterns",
-    "lesson_category": "Web Development",
-    "lesson_status": "published",
-    "lesson_created_at": "2024-10-20T..."
-  }
+    {
+        "lesson_id": "new-uuid",
+        "lesson_title": "Advanced React Patterns",
+        "lesson_description": "Learn advanced React patterns",
+        "lesson_category": "Web Development",
+        "lesson_status": "published",
+        "lesson_created_at": "2024-10-20T..."
+    }
 ]
 ```
 
 **Response (Unauthorized):**
+
 ```json
 {
-  "code": "P0001",
-  "message": "Unauthorized: Admin access required"
+    "code": "P0001",
+    "message": "Unauthorized: Admin access required"
 }
 ```
 
@@ -147,8 +153,9 @@ curl -X POST http://localhost:4000/rpc/update_lesson \
 ```
 
 **Response:**
+
 ```json
-true  // Success
+true // Success
 ```
 
 ---
@@ -165,8 +172,9 @@ curl -X POST http://localhost:4000/rpc/delete_lesson \
 ```
 
 **Response:**
+
 ```json
-true  // Deleted successfully
+true // Deleted successfully
 ```
 
 ---
@@ -176,23 +184,25 @@ true  // Deleted successfully
 ### 1. Login and Save Token
 
 **Request:**
+
 - **Method**: `POST`
 - **URL**: `http://localhost:4000/rpc/verify_login`
 - **Body**:
-  ```json
-  {
-    "p_email": "admin@example.com",
-    "p_password": "admin123"
-  }
-  ```
+    ```json
+    {
+        "p_email": "admin@example.com",
+        "p_password": "admin123"
+    }
+    ```
 
 **Tests** (Auto-extract token):
+
 ```javascript
 // Save token to environment variable
 const response = pm.response.json();
 if (response.length > 0) {
-    pm.environment.set("access_token", response[0].access_token);
-    pm.environment.set("user_role", response[0].user_role);
+    pm.environment.set('access_token', response[0].access_token);
+    pm.environment.set('user_role', response[0].user_role);
 }
 ```
 
@@ -201,22 +211,24 @@ if (response.length > 0) {
 ### 2. Use Token in Requests
 
 **Create Environment Variables in Postman:**
+
 - `base_url`: `http://localhost:4000`
 - `access_token`: (will be set automatically after login)
 
 **Example - Create Lesson:**
+
 - **URL**: `{{base_url}}/rpc/create_lesson`
 - **Body**:
-  ```json
-  {
-    "p_token": "{{access_token}}",
-    "p_title": "New Lesson",
-    "p_description": "Test",
-    "p_content": "# Content",
-    "p_category": "Programming",
-    "p_status": "draft"
-  }
-  ```
+    ```json
+    {
+        "p_token": "{{access_token}}",
+        "p_title": "New Lesson",
+        "p_description": "Test",
+        "p_content": "# Content",
+        "p_category": "Programming",
+        "p_status": "draft"
+    }
+    ```
 
 ---
 
@@ -224,29 +236,29 @@ if (response.length > 0) {
 
 ### user_sessions Table
 
-| Column | Type | Description |
-|--------|------|-------------|
-| id | UUID | Session ID |
-| user_id | UUID | Foreign key to users |
-| token | VARCHAR(500) | Secure token (base64) |
-| expires_at | TIMESTAMP | Token expiration (7 days) |
-| created_at | TIMESTAMP | Session creation time |
-| last_used_at | TIMESTAMP | Last token usage |
+| Column       | Type         | Description               |
+| ------------ | ------------ | ------------------------- |
+| id           | UUID         | Session ID                |
+| user_id      | UUID         | Foreign key to users      |
+| token        | VARCHAR(500) | Secure token (base64)     |
+| expires_at   | TIMESTAMP    | Token expiration (7 days) |
+| created_at   | TIMESTAMP    | Session creation time     |
+| last_used_at | TIMESTAMP    | Last token usage          |
 
 ---
 
 ## 🔧 Available Functions
 
-| Function | Parameters | Returns | Access |
-|----------|-----------|---------|--------|
-| `verify_login()` | email, password | User + token | Public |
-| `verify_token()` | token | User info | Public |
-| `logout()` | token | boolean | Authenticated |
-| `is_admin()` | token | boolean | Internal |
-| `get_user_id_from_token()` | token | UUID | Internal |
-| `create_lesson()` | token, lesson_data | Lesson | Admin only |
-| `update_lesson()` | token, lesson_id, updates | boolean | Admin only |
-| `delete_lesson()` | token, lesson_id | boolean | Admin only |
+| Function                   | Parameters                | Returns      | Access        |
+| -------------------------- | ------------------------- | ------------ | ------------- |
+| `verify_login()`           | email, password           | User + token | Public        |
+| `verify_token()`           | token                     | User info    | Public        |
+| `logout()`                 | token                     | boolean      | Authenticated |
+| `is_admin()`               | token                     | boolean      | Internal      |
+| `get_user_id_from_token()` | token                     | UUID         | Internal      |
+| `create_lesson()`          | token, lesson_data        | Lesson       | Admin only    |
+| `update_lesson()`          | token, lesson_id, updates | boolean      | Admin only    |
+| `delete_lesson()`          | token, lesson_id          | boolean      | Admin only    |
 
 ---
 
@@ -278,12 +290,12 @@ if (response.length > 0) {
 ```javascript
 // 1. Login
 const loginResponse = await fetch('http://localhost:4000/rpc/verify_login', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    p_email: 'admin@example.com',
-    p_password: 'admin123'
-  })
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        p_email: 'admin@example.com',
+        p_password: 'admin123',
+    }),
 });
 
 const [user] = await loginResponse.json();
@@ -291,23 +303,23 @@ const token = user.access_token;
 
 // 2. Create lesson (admin only)
 const createResponse = await fetch('http://localhost:4000/rpc/create_lesson', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    p_token: token,
-    p_title: 'New Lesson',
-    p_description: 'Description',
-    p_content: '# Content',
-    p_category: 'Programming',
-    p_status: 'draft'
-  })
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        p_token: token,
+        p_title: 'New Lesson',
+        p_description: 'Description',
+        p_content: '# Content',
+        p_category: 'Programming',
+        p_status: 'draft',
+    }),
 });
 
 // 3. Logout
 await fetch('http://localhost:4000/rpc/logout', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ p_token: token })
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ p_token: token }),
 });
 ```
 
@@ -315,11 +327,11 @@ await fetch('http://localhost:4000/rpc/logout', {
 
 ## 🎯 Test Accounts
 
-| Email | Password | Role | Can Create Lessons? |
-|-------|----------|------|---------------------|
-| admin@example.com | admin123 | admin | ✅ Yes |
-| user@example.com | user123 | user | ❌ No |
-| jane@example.com | user123 | user | ❌ No |
+| Email             | Password | Role  | Can Create Lessons? |
+| ----------------- | -------- | ----- | ------------------- |
+| admin@example.com | admin123 | admin | ✅ Yes              |
+| user@example.com  | user123  | user  | ❌ No               |
+| jane@example.com  | user123  | user  | ❌ No               |
 
 ---
 

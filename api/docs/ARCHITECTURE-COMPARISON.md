@@ -48,11 +48,13 @@
 ```
 
 **Pros:**
+
 - ✅ Fast development (hot reload)
 - ✅ Quick iteration
 - ✅ Easy debugging
 
 **Cons:**
+
 - ⚠️ PostgREST exposed to localhost
 - ⚠️ Can bypass Express authentication
 - ❌ Not production-ready
@@ -112,12 +114,14 @@
 ```
 
 **Pros:**
+
 - ✅ PostgREST fully isolated
 - ✅ Cannot bypass authentication
 - ✅ Production-ready security
 - ✅ Complete RBAC enforcement
 
 **Cons:**
+
 - ⚠️ No hot reload (must rebuild)
 - ⚠️ Slower development iteration
 
@@ -180,19 +184,22 @@ User → http://localhost:3001/lessons → ❌ Connection refused
 ### Development Mode
 
 **docker-compose.dev.yml:**
+
 ```yaml
 postgrest:
-  ports:
-    - "3001:3000"  # ⚠️ EXPOSED to host
+    ports:
+        - '3001:3000' # ⚠️ EXPOSED to host
 ```
 
 **.env.development:**
+
 ```env
 DB_HOST=localhost           # Host machine
 POSTGREST_URL=http://localhost:3001  # Exposed port
 ```
 
 **Run Command:**
+
 ```bash
 .\\resources\\dev-start.bat
 npm run dev  # Express on host
@@ -203,24 +210,27 @@ npm run dev  # Express on host
 ### Production Mode
 
 **docker-compose.yml:**
+
 ```yaml
 postgrest:
-  expose:
-    - "3000"  # ✅ Internal only, NO port mapping
+    expose:
+        - '3000' # ✅ Internal only, NO port mapping
 
 express:
-  build: .
-  ports:
-    - "4000:4000"  # Only Express exposed
+    build: .
+    ports:
+        - '4000:4000' # Only Express exposed
 ```
 
 **.env.production:**
+
 ```env
 DB_HOST=postgres  # Docker service name
 POSTGREST_URL=http://learning-platform-postgrest:3000  # Internal
 ```
 
 **Run Command:**
+
 ```bash
 .\\resources\\prod-start.bat  # Everything in Docker
 ```
@@ -230,6 +240,7 @@ POSTGREST_URL=http://learning-platform-postgrest:3000  # Internal
 ## 🎯 When to Use Each Mode
 
 ### Use Development Mode When:
+
 - 🔧 Writing new features
 - 🐛 Debugging code
 - 🧪 Testing API endpoints
@@ -237,6 +248,7 @@ POSTGREST_URL=http://learning-platform-postgrest:3000  # Internal
 - 🔄 Want hot reload
 
 ### Use Production Mode When:
+
 - 🚀 Deploying to server
 - 🔒 Testing security
 - 🧪 Integration testing
@@ -247,26 +259,26 @@ POSTGREST_URL=http://learning-platform-postgrest:3000  # Internal
 
 ## 🔐 Security Comparison
 
-| Aspect | Development | Production |
-|--------|-------------|------------|
-| **PostgREST Access** | ⚠️ localhost:3001 exposed | ✅ Blocked, internal only |
-| **Bypass Possible** | ❌ Yes (direct access) | ✅ No (blocked) |
-| **Authentication** | ⚠️ Can skip via PostgREST | ✅ Always enforced |
-| **RBAC** | ⚠️ Can skip via PostgREST | ✅ Always enforced |
-| **Network Isolation** | ❌ No | ✅ Yes |
-| **Production Ready** | ❌ No | ✅ Yes |
+| Aspect                | Development               | Production                |
+| --------------------- | ------------------------- | ------------------------- |
+| **PostgREST Access**  | ⚠️ localhost:3001 exposed | ✅ Blocked, internal only |
+| **Bypass Possible**   | ❌ Yes (direct access)    | ✅ No (blocked)           |
+| **Authentication**    | ⚠️ Can skip via PostgREST | ✅ Always enforced        |
+| **RBAC**              | ⚠️ Can skip via PostgREST | ✅ Always enforced        |
+| **Network Isolation** | ❌ No                     | ✅ Yes                    |
+| **Production Ready**  | ❌ No                     | ✅ Yes                    |
 
 ---
 
 ## 📊 Performance Comparison
 
-| Metric | Development | Production |
-|--------|-------------|------------|
-| **Startup Time** | ⚡ Fast (~5s) | ⚠️ Slower (~15s + build) |
-| **Hot Reload** | ✅ Yes (tsx watch) | ❌ No (rebuild needed) |
-| **Code Changes** | ⚡ Instant | ⚠️ Rebuild required |
-| **Memory Usage** | 🟢 Lower (host) | 🟡 Higher (Docker) |
-| **CPU Usage** | 🟢 Lower | 🟡 Higher (containers) |
+| Metric           | Development        | Production               |
+| ---------------- | ------------------ | ------------------------ |
+| **Startup Time** | ⚡ Fast (~5s)      | ⚠️ Slower (~15s + build) |
+| **Hot Reload**   | ✅ Yes (tsx watch) | ❌ No (rebuild needed)   |
+| **Code Changes** | ⚡ Instant         | ⚠️ Rebuild required      |
+| **Memory Usage** | 🟢 Lower (host)    | 🟡 Higher (Docker)       |
+| **CPU Usage**    | 🟢 Lower           | 🟡 Higher (containers)   |
 
 ---
 
@@ -275,12 +287,14 @@ POSTGREST_URL=http://learning-platform-postgrest:3000  # Internal
 You now have **TWO configurations**:
 
 ### 🔧 Development Mode (`.\\resources\\dev-start.bat`)
+
 - ✅ Fast iteration with hot reload
 - ⚠️ PostgREST exposed (acceptable for dev)
 - ✅ Easy debugging
 - ⚠️ Less secure (dev only!)
 
 ### 🚀 Production Mode (`.\\resources\\prod-start.bat`)
+
 - ✅ PostgREST fully blocked
 - ✅ Production-ready security
 - ✅ Complete isolation

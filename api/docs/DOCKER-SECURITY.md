@@ -19,6 +19,7 @@ FROM node:22-alpine
 ```
 
 **Benefits:**
+
 - ✅ Smaller final image (no devDependencies)
 - ✅ Reduced attack surface
 - ✅ Faster deployment
@@ -34,6 +35,7 @@ FROM node:22-alpine
 ### ✅ Security Updates
 
 Added automatic security updates:
+
 ```dockerfile
 RUN apk upgrade --no-cache
 ```
@@ -54,6 +56,7 @@ USER nodejs
 ```
 
 **Security Benefits:**
+
 - ✅ Limits damage if container is compromised
 - ✅ Follows principle of least privilege
 - ✅ Prevents privilege escalation attacks
@@ -80,6 +83,7 @@ Ensures the non-root user owns all application files.
 ## Image Comparison
 
 ### Before (node:20-alpine)
+
 ```
 ❌ Older Node.js version
 ❌ Running as root user
@@ -89,6 +93,7 @@ Ensures the non-root user owns all application files.
 ```
 
 ### After (node:22-alpine with multi-stage)
+
 ```
 ✅ Latest Node.js LTS (22.x)
 ✅ Non-root user (nodejs:1001)
@@ -102,11 +107,13 @@ Ensures the non-root user owns all application files.
 ## Building the Secure Image
 
 ### Development
+
 ```bash
 docker-compose -f docker-compose.dev.yml build
 ```
 
 ### Production
+
 ```bash
 docker-compose build
 ```
@@ -139,12 +146,14 @@ trivy image learning-platform-api
 ## Image Size Comparison
 
 **Before:**
+
 ```
 REPOSITORY                  SIZE
 learning-platform-api      ~450MB
 ```
 
 **After:**
+
 ```
 REPOSITORY                  SIZE
 learning-platform-api      ~180MB
@@ -197,6 +206,7 @@ trivy image learning-platform-api
 ### 1. Environment Variables
 
 Never hardcode secrets in Dockerfile:
+
 ```dockerfile
 # ❌ Bad
 ENV DB_PASSWORD=postgres
@@ -207,6 +217,7 @@ ENV DB_PASSWORD=postgres
 ### 2. Keep Base Image Updated
 
 Regularly update the base image:
+
 ```bash
 # Pull latest version
 docker pull node:22-alpine
@@ -218,17 +229,19 @@ docker-compose build --no-cache
 ### 3. Scan Images Regularly
 
 Set up automated scanning in your CI/CD pipeline:
+
 ```yaml
 # GitHub Actions example
 - name: Scan image
   uses: aquasecurity/trivy-action@master
   with:
-    image-ref: 'learning-platform-api'
+      image-ref: 'learning-platform-api'
 ```
 
 ### 4. Use Official Images
 
 Always use official Node.js images from Docker Hub:
+
 ```dockerfile
 FROM node:22-alpine  # ✅ Official image
 ```
@@ -236,13 +249,14 @@ FROM node:22-alpine  # ✅ Official image
 ### 5. Limit Container Capabilities
 
 In docker-compose.yml, you can further restrict capabilities:
+
 ```yaml
 services:
-  learning-platform-express:
-    cap_drop:
-      - ALL
-    cap_add:
-      - NET_BIND_SERVICE
+    learning-platform-express:
+        cap_drop:
+            - ALL
+        cap_add:
+            - NET_BIND_SERVICE
 ```
 
 ## Resources

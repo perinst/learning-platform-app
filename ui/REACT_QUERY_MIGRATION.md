@@ -7,11 +7,13 @@ Successfully migrated the Learning Platform from prop-drilling to **React Query*
 ## ✅ Completed Changes
 
 ### 1. React Query Setup
+
 - ✅ Installed `@tanstack/react-query` and `@tanstack/react-query-devtools`
 - ✅ Created `src/lib/queryClient.ts` with QueryClient configuration
 - ✅ Created query keys structure for auth, lessons, and progress
 
 ### 2. API Layer (src/api/index.ts)
+
 - ✅ Created `authApi` with getCurrentUser, login, logout, getUsers
 - ✅ Created `lessonsApi` with CRUD operations
 - ✅ Created `progressApi` with update/fetch functions
@@ -19,25 +21,30 @@ Successfully migrated the Learning Platform from prop-drilling to **React Query*
 - ✅ Simulated async operations with delays
 
 ### 3. Custom Hooks
+
 - ✅ `src/hooks/useAuth.ts` - useCurrentUser, useUsers, useLogin, useLogout
 - ✅ `src/hooks/useLessons.ts` - useLessons, useLesson, useCreateLesson, useUpdateLesson, useDeleteLesson
 - ✅ `src/hooks/useProgress.ts` - useProgress, useUserProgress, useLessonProgress, useUpdateProgress, useMarkLessonAccessed
 
 ### 4. Updated Components (Auth)
+
 - ✅ `Login.tsx` - Now uses useLogin hook, React Router Links
 - ✅ `Register.tsx` - Now uses React Router navigation
 - ✅ `ForgotPassword.tsx` - Now uses React Router Links
 - ✅ `ProtectedRoute.tsx` - Now uses useCurrentUser hook
 
 ### 5. Updated Components (Layout)
+
 - ✅ `Header.tsx` - Now uses useCurrentUser, useLogout hooks, React Router Links
 - ✅ `Layout.tsx` - Now renders Outlet for nested routes
 
 ### 6. Updated Components (Lessons)
+
 - ✅ `LessonDetail.tsx` - Now uses useUpdateProgress mutation
 - ✅ `LessonEditor.tsx` - Now uses useCreateLesson, useUpdateLesson, useCurrentUser hooks
 
 ### 7. App Structure
+
 - ✅ `App.tsx` - Wraps app with QueryClientProvider and BrowserRouter
 - ✅ `src/routes/index.tsx` - New AppRoutes component with React Router v6
 
@@ -46,41 +53,41 @@ Successfully migrated the Learning Platform from prop-drilling to **React Query*
 These components still receive data via props and need to be updated to use React Query hooks:
 
 1. **UserDashboard.tsx** - Needs to use:
-   - `useCurrentUser()` instead of currentUser prop
-   - `useLessons()` instead of lessons prop
-   - `useProgress()` instead of progress prop
-   - `useNavigate()` instead of onNavigate prop
-   - `useNavigate()` + lesson click instead of onSelectLesson prop
+    - `useCurrentUser()` instead of currentUser prop
+    - `useLessons()` instead of lessons prop
+    - `useProgress()` instead of progress prop
+    - `useNavigate()` instead of onNavigate prop
+    - `useNavigate()` + lesson click instead of onSelectLesson prop
 
 2. **AdminDashboard.tsx** - Needs to use:
-   - `useLessons()` instead of lessons prop
-   - `useUsers()` instead of users prop
-   - `useProgress()` instead of progress prop
-   - `useCreateLesson()` mutation instead of onCreateLesson prop
-   - `useUpdateLesson()` mutation instead of onEditLesson prop
-   - `useDeleteLesson()` mutation instead of onDeleteLesson prop
-   - `useNavigate()` instead of onSelectLesson prop
+    - `useLessons()` instead of lessons prop
+    - `useUsers()` instead of users prop
+    - `useProgress()` instead of progress prop
+    - `useCreateLesson()` mutation instead of onCreateLesson prop
+    - `useUpdateLesson()` mutation instead of onEditLesson prop
+    - `useDeleteLesson()` mutation instead of onDeleteLesson prop
+    - `useNavigate()` instead of onSelectLesson prop
 
 3. **LessonList.tsx** - Needs to use:
-   - `useLessons()` instead of lessons prop
-   - `useProgress()` instead of progress prop
-   - `useCurrentUser()` instead of currentUser prop
-   - `useNavigate()` instead of onSelectLesson and onCreateLesson props
+    - `useLessons()` instead of lessons prop
+    - `useProgress()` instead of progress prop
+    - `useCurrentUser()` instead of currentUser prop
+    - `useNavigate()` instead of onSelectLesson and onCreateLesson props
 
 4. **LessonDetail.tsx** - Needs to use (PARTIALLY DONE):
-   - ✅ Already uses `useUpdateProgress()` mutation
-   - ❌ Still receives lesson, currentUser, progress as props
-   - ❌ Needs `useParams()` to get lesson ID from URL
-   - ❌ Needs `useLesson(id)` to fetch lesson data
-   - ❌ Needs `useCurrentUser()` for currentUser
-   - ❌ Needs `useLessonProgress()` for progress
-   - ❌ Needs `useNavigate()` instead of onBack prop
+    - ✅ Already uses `useUpdateProgress()` mutation
+    - ❌ Still receives lesson, currentUser, progress as props
+    - ❌ Needs `useParams()` to get lesson ID from URL
+    - ❌ Needs `useLesson(id)` to fetch lesson data
+    - ❌ Needs `useCurrentUser()` for currentUser
+    - ❌ Needs `useLessonProgress()` for progress
+    - ❌ Needs `useNavigate()` instead of onBack prop
 
 5. **LessonEditor.tsx** - Needs to use (PARTIALLY DONE):
-   - ✅ Already uses `useCreateLesson()`, `useUpdateLesson()`, `useCurrentUser()` hooks
-   - ❌ Still receives lesson prop (should use `useParams()` + `useLesson(id)`)
-   - ❌ Still receives onBack prop (should use `useNavigate()`)
-   - ❌ Still receives categories prop (should compute from `useLessons()`)
+    - ✅ Already uses `useCreateLesson()`, `useUpdateLesson()`, `useCurrentUser()` hooks
+    - ❌ Still receives lesson prop (should use `useParams()` + `useLesson(id)`)
+    - ❌ Still receives onBack prop (should use `useNavigate()`)
+    - ❌ Still receives categories prop (should compute from `useLessons()`)
 
 ## 📋 Next Steps
 
@@ -89,16 +96,16 @@ To complete the migration, update the remaining components:
 ```typescript
 // Example for UserDashboard
 export function UserDashboard() {
-  const navigate = useNavigate();
-  const { data: currentUser } = useCurrentUser();
-  const { data: lessons = [] } = useLessons();
-  const { data: progress = [] } = useProgress();
+    const navigate = useNavigate();
+    const { data: currentUser } = useCurrentUser();
+    const { data: lessons = [] } = useLessons();
+    const { data: progress = [] } = useProgress();
 
-  const handleSelectLesson = (lesson: Lesson) => {
-    navigate(`/lessons/${lesson.id}`);
-  };
+    const handleSelectLesson = (lesson: Lesson) => {
+        navigate(`/lessons/${lesson.id}`);
+    };
 
-  // ... rest of component
+    // ... rest of component
 }
 ```
 
@@ -115,11 +122,13 @@ export function UserDashboard() {
 ## 🚀 Testing
 
 To test the current state:
+
 ```bash
 npm run dev
 ```
 
 Visit http://localhost:5173 and:
+
 1. ✅ Login page should work
 2. ✅ Authentication should persist in localStorage
 3. ✅ Logout should clear session

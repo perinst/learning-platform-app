@@ -49,6 +49,7 @@ npm start
 ### Public Endpoints (No Authentication Required)
 
 #### Register User
+
 ```bash
 POST http://localhost:4000/rpc/register_user
 Content-Type: application/json
@@ -62,6 +63,7 @@ Content-Type: application/json
 ```
 
 #### Login
+
 ```bash
 POST http://localhost:4000/rpc/verify_login
 Content-Type: application/json
@@ -89,18 +91,21 @@ Authorization: Bearer <your_token_here>
 ```
 
 #### Get All Lessons (Any authenticated user)
+
 ```bash
 GET http://localhost:4000/lessons
 Authorization: Bearer abc123...
 ```
 
 #### Get User Progress (Any authenticated user)
+
 ```bash
 GET http://localhost:4000/progress?user_id=eq.<user_id>
 Authorization: Bearer abc123...
 ```
 
 #### Create Lesson (Admin only)
+
 ```bash
 POST http://localhost:4000/rpc/create_lesson
 Authorization: Bearer abc123...
@@ -117,6 +122,7 @@ Content-Type: application/json
 ```
 
 #### Update Lesson (Admin only)
+
 ```bash
 POST http://localhost:4000/rpc/update_lesson
 Authorization: Bearer abc123...
@@ -130,6 +136,7 @@ Content-Type: application/json
 ```
 
 #### Delete Lesson (Admin only)
+
 ```bash
 POST http://localhost:4000/rpc/delete_lesson
 Authorization: Bearer abc123...
@@ -144,28 +151,34 @@ Content-Type: application/json
 ## Security Features
 
 ### 🔒 Authentication
+
 - All requests (except public routes) require valid Bearer token
 - Tokens are verified against PostgreSQL database
 - Expired tokens are automatically rejected
 
 ### 🛡️ RBAC (Role-Based Access Control)
+
 - **User role**: Can read lessons, manage their own progress
 - **Admin role**: Can create, update, delete lessons
 
 Admin-only operations:
+
 - Creating lessons
 - Updating lessons
 - Deleting lessons
 - User management
 
 ### 🚫 PostgREST Protection
+
 - PostgREST runs on port **3001** (internal network only)
 - Cannot be accessed directly from outside Docker network
 - All external requests must go through Express proxy on port **4000**
 - Express validates authentication before forwarding to PostgREST
 
 ### 📋 Request Context
+
 Express adds user context headers when proxying:
+
 - `X-User-Id`: User's UUID
 - `X-User-Email`: User's email
 - `X-User-Role`: User's role (admin/user)
@@ -175,41 +188,47 @@ These can be used by PostgREST or PostgreSQL for additional validation.
 ## Error Responses
 
 ### 401 Unauthorized
+
 ```json
 {
-  "error": "Unauthorized",
-  "message": "Missing or invalid Authorization header"
+    "error": "Unauthorized",
+    "message": "Missing or invalid Authorization header"
 }
 ```
 
 ### 403 Forbidden
+
 ```json
 {
-  "error": "Forbidden",
-  "message": "Admin access required for this operation"
+    "error": "Forbidden",
+    "message": "Admin access required for this operation"
 }
 ```
 
 ### 500 Server Error
+
 ```json
 {
-  "error": "Proxy error occurred"
+    "error": "Proxy error occurred"
 }
 ```
 
 ## Development
 
 ### Run in Watch Mode
+
 ```bash
 npm run dev
 ```
 
 ### Build TypeScript
+
 ```bash
 npm run build
 ```
 
 ### Lint Code
+
 ```bash
 npm run lint
 ```
@@ -235,6 +254,7 @@ NODE_ENV=development
 ## Testing Scenarios
 
 ### 1. Test Public Access (Should Work)
+
 ```bash
 curl -X POST http://localhost:4000/rpc/verify_login \
   -H "Content-Type: application/json" \
@@ -242,18 +262,21 @@ curl -X POST http://localhost:4000/rpc/verify_login \
 ```
 
 ### 2. Test Protected Route Without Token (Should Fail)
+
 ```bash
 curl http://localhost:4000/lessons
 # Response: 401 Unauthorized
 ```
 
 ### 3. Test Protected Route With Token (Should Work)
+
 ```bash
 curl http://localhost:4000/lessons \
   -H "Authorization: Bearer <your_token>"
 ```
 
 ### 4. Test Admin Operation as User (Should Fail)
+
 ```bash
 # Login as regular user first
 curl -X POST http://localhost:4000/rpc/create_lesson \
@@ -264,6 +287,7 @@ curl -X POST http://localhost:4000/rpc/create_lesson \
 ```
 
 ### 5. Test Direct PostgREST Access (Should Fail if properly networked)
+
 ```bash
 curl http://localhost:3001/lessons
 # Should not be accessible from outside Docker network
@@ -272,12 +296,14 @@ curl http://localhost:3001/lessons
 ## Logging
 
 The proxy logs all requests:
+
 - `[PUBLIC]` - Public route access
 - `[PROTECTED]` - Authenticated route access with user info
 - `✓ Authenticated` - Successful authentication
 - `Auth Error` - Authentication failures
 
 Example:
+
 ```
 ✓ Authenticated: admin@example.com (admin)
 [PROTECTED] GET /lessons - User: admin@example.com (admin)
@@ -295,25 +321,29 @@ Example:
 ## Customization
 
 ### Add New Public Routes
+
 Edit `src/config/routes.config.ts`:
+
 ```typescript
 export const publicRoutes = [
-  '/rpc/register_user',
-  '/rpc/verify_login',
-  '/your_new_public_route',  // Add here
+    '/rpc/register_user',
+    '/rpc/verify_login',
+    '/your_new_public_route', // Add here
 ];
 ```
 
 ### Add New Admin Routes
+
 Edit `src/middleware/auth.middleware.ts` in the `isAdminRoute()` function:
+
 ```typescript
-const adminRoutes = [
-  { method: 'POST', pattern: /^\/your_admin_route/ },
-];
+const adminRoutes = [{ method: 'POST', pattern: /^\/your_admin_route/ }];
 ```
 
 ### Add Custom Middleware
+
 Edit `src/index.ts`:
+
 ```typescript
 // Add before auth middleware
 app.use(yourCustomMiddleware);

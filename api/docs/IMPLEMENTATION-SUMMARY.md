@@ -14,24 +14,25 @@ Client → Express (Port 4000) → Auth/RBAC → PostgREST (Port 3001) → Postg
 ### Key Security Features:
 
 1. **Express on Port 4000** (Public)
-   - ✅ Intercepts ALL requests
-   - ✅ Validates Bearer tokens
-   - ✅ Checks RBAC permissions
-   - ✅ Only then proxies to PostgREST
+    - ✅ Intercepts ALL requests
+    - ✅ Validates Bearer tokens
+    - ✅ Checks RBAC permissions
+    - ✅ Only then proxies to PostgREST
 
 2. **PostgREST on Port 3001** (Internal)
-   - ✅ Isolated in Docker network
-   - ✅ NOT accessible from outside
-   - ✅ Only receives authenticated requests from Express
+    - ✅ Isolated in Docker network
+    - ✅ NOT accessible from outside
+    - ✅ Only receives authenticated requests from Express
 
 3. **PostgreSQL Functions**
-   - ✅ Token validation via `verify_token()`
-   - ✅ Admin check via `is_admin()`
-   - ✅ Reusing existing database auth
+    - ✅ Token validation via `verify_token()`
+    - ✅ Admin check via `is_admin()`
+    - ✅ Reusing existing database auth
 
 ## Files Created
 
 ### TypeScript Application
+
 ```
 src/
 ├── index.ts                    # Main Express server with proxy
@@ -44,12 +45,14 @@ src/
 ```
 
 ### Configuration
+
 - `package.json` - Dependencies (express, http-proxy-middleware, pg, etc.)
 - `tsconfig.json` - TypeScript configuration
 - `.eslintrc.json` - Code linting rules
 - `docker-compose.yml` - Updated with internal network
 
 ### Documentation
+
 - `README.md` - Complete setup and usage guide
 - `AUTH-PROXY-GUIDE.md` - Detailed authentication documentation
 - `QUICKSTART.md` - Quick setup for Windows users
@@ -57,16 +60,19 @@ src/
 ## How to Use
 
 ### 1. Install Dependencies
+
 ```bash
 npm install
 ```
 
 If PowerShell blocks, use CMD or run:
+
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
 ### 2. Start All Services
+
 ```bash
 # Start PostgreSQL + PostgREST
 docker-compose up -d
@@ -78,6 +84,7 @@ npm run dev
 ### 3. Test It
 
 **Login (Public):**
+
 ```bash
 POST http://localhost:4000/rpc/verify_login
 {
@@ -87,18 +94,21 @@ POST http://localhost:4000/rpc/verify_login
 ```
 
 **Access Protected Resource:**
+
 ```bash
 GET http://localhost:4000/lessons
 Authorization: Bearer <token_from_login>
 ```
 
 **Try Without Token (Fails):**
+
 ```bash
 GET http://localhost:4000/lessons
 # Returns 401 Unauthorized
 ```
 
 **Try Direct PostgREST Access (Blocked):**
+
 ```bash
 GET http://localhost:3001/lessons
 # Cannot connect - internal network only
@@ -110,33 +120,36 @@ GET http://localhost:3001/lessons
 2. **Express auth middleware** extracts Bearer token
 3. **Queries PostgreSQL** via `verify_token(token)`
 4. **Token validation:**
-   - ✅ Token exists in database
-   - ✅ Token not expired
-   - ✅ Returns user info
+    - ✅ Token exists in database
+    - ✅ Token not expired
+    - ✅ Returns user info
 5. **RBAC check** for admin-only routes
 6. **Attaches user** to request object
 7. **Proxies request** to PostgREST with user headers:
-   - `X-User-Id`
-   - `X-User-Email`
-   - `X-User-Role`
+    - `X-User-Id`
+    - `X-User-Email`
+    - `X-User-Role`
 8. **PostgREST processes** and returns response
 9. **Express forwards** response to client
 
 ## Route Types
 
 ### Public Routes (No Auth)
+
 - `/rpc/register_user` - User registration
 - `/rpc/verify_login` - User login
 - `/health` - Health check
 
 ### Protected Routes (Auth Required)
+
 - All other routes need `Authorization: Bearer <token>`
 - Examples:
-  - `GET /lessons` - View lessons
-  - `GET /progress` - User progress
-  - `GET /chat_messages` - Chat history
+    - `GET /lessons` - View lessons
+    - `GET /progress` - User progress
+    - `GET /chat_messages` - Chat history
 
 ### Admin-Only Routes (Auth + Admin Role)
+
 - `POST /rpc/create_lesson`
 - `POST /rpc/update_lesson`
 - `POST /rpc/delete_lesson`
@@ -156,47 +169,55 @@ GET http://localhost:3001/lessons
 ## Error Responses
 
 ### 401 Unauthorized
+
 Missing or invalid token:
+
 ```json
 {
-  "error": "Unauthorized",
-  "message": "Missing or invalid Authorization header. Use: Bearer <token>"
+    "error": "Unauthorized",
+    "message": "Missing or invalid Authorization header. Use: Bearer <token>"
 }
 ```
 
 ### 403 Forbidden
+
 Non-admin trying admin action:
+
 ```json
 {
-  "error": "Forbidden",
-  "message": "Admin access required for this operation"
+    "error": "Forbidden",
+    "message": "Admin access required for this operation"
 }
 ```
 
 ## Customization
 
 ### Add Public Route
+
 Edit `src/config/routes.config.ts`:
+
 ```typescript
 export const publicRoutes = [
-  '/rpc/register_user',
-  '/rpc/verify_login',
-  '/your_new_public_route',  // Add here
+    '/rpc/register_user',
+    '/rpc/verify_login',
+    '/your_new_public_route', // Add here
 ];
 ```
 
 ### Add Admin Route
+
 Edit `src/middleware/auth.middleware.ts`:
+
 ```typescript
-const adminRoutes = [
-  { method: 'POST', pattern: /^\/your_admin_route/ },
-];
+const adminRoutes = [{ method: 'POST', pattern: /^\/your_admin_route/ }];
 ```
 
 ### Add Custom Middleware
+
 Edit `src/index.ts`:
+
 ```typescript
-app.use(yourCustomMiddleware);  // Before or after auth
+app.use(yourCustomMiddleware); // Before or after auth
 ```
 
 ## Testing Commands
@@ -218,6 +239,7 @@ curl -X POST http://localhost:4000/rpc/create_lesson -H "Authorization: Bearer <
 ## Monitoring
 
 Express logs show:
+
 ```
 ✓ Authenticated: admin@example.com (admin)
 [PROTECTED] GET /lessons - User: admin@example.com (admin)

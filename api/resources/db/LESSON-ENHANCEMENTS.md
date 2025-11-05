@@ -1,6 +1,7 @@
 # Lesson Structure Enhancement
 
 ## Overview
+
 This enhancement adds support for **Real-World Applications** and **Multiple Choice Questions** to lessons, allowing for richer educational content.
 
 ## Database Changes
@@ -8,6 +9,7 @@ This enhancement adds support for **Real-World Applications** and **Multiple Cho
 ### New Tables
 
 #### 1. `lesson_applications`
+
 Stores real-world applications for each lesson.
 
 ```sql
@@ -19,6 +21,7 @@ Stores real-world applications for each lesson.
 ```
 
 #### 2. `lesson_questions`
+
 Stores multiple choice questions for each lesson.
 
 ```sql
@@ -29,6 +32,7 @@ Stores multiple choice questions for each lesson.
 ```
 
 #### 3. `question_choices`
+
 Stores answer choices for each question.
 
 ```sql
@@ -42,9 +46,11 @@ Stores answer choices for each question.
 ### New RPC Functions
 
 #### `create_lesson_with_content()`
+
 Creates a lesson with all related content in a single transaction.
 
 **Parameters:**
+
 - `p_token`: Authentication token
 - `p_title`, `p_description`, `p_content`, `p_category`, `p_status`: Basic lesson fields
 - `p_summary`, `p_image_url`: Optional fields
@@ -52,14 +58,17 @@ Creates a lesson with all related content in a single transaction.
 - `p_questions`: JSONB array of questions with choices
 
 #### `update_lesson_with_content()`
+
 Updates a lesson and replaces all related content.
 
 **Parameters:** Same as create, plus `p_lesson_id`
 
 #### `get_lesson_with_content()`
+
 Retrieves a lesson with all applications and questions.
 
 #### `get_all_lessons_with_content()`
+
 Retrieves all lessons with their full content.
 
 ## Frontend API Changes
@@ -68,30 +77,30 @@ Retrieves all lessons with their full content.
 
 ```typescript
 interface QuestionChoice {
-  id?: number;
-  choiceText: string;
-  isCorrect: boolean;
-  displayOrder: number;
+    id?: number;
+    choiceText: string;
+    isCorrect: boolean;
+    displayOrder: number;
 }
 
 interface LessonQuestion {
-  id?: number;
-  questionText: string;
-  displayOrder: number;
-  choices: QuestionChoice[];
+    id?: number;
+    questionText: string;
+    displayOrder: number;
+    choices: QuestionChoice[];
 }
 
 interface LessonApplication {
-  id?: number;
-  title: string;
-  description: string;
-  displayOrder: number;
+    id?: number;
+    title: string;
+    description: string;
+    displayOrder: number;
 }
 
 interface Lesson {
-  // ... existing fields
-  applications?: LessonApplication[];
-  questions?: LessonQuestion[];
+    // ... existing fields
+    applications?: LessonApplication[];
+    questions?: LessonQuestion[];
 }
 ```
 
@@ -101,38 +110,38 @@ interface Lesson {
 
 ```typescript
 const newLesson = await lessonsApi.createLesson({
-  title: "Introduction to React",
-  description: "Learn React basics",
-  content: "# React Fundamentals...",
-  category: "Programming",
-  status: "published",
+    title: 'Introduction to React',
+    description: 'Learn React basics',
+    content: '# React Fundamentals...',
+    category: 'Programming',
+    status: 'published',
 
-  // Real-world applications
-  applications: [
-    {
-      title: "Building Web Apps",
-      description: "React is used by Facebook, Instagram, Netflix...",
-      displayOrder: 0
-    },
-    {
-      title: "Mobile Development",
-      description: "React Native allows building mobile apps...",
-      displayOrder: 1
-    }
-  ],
+    // Real-world applications
+    applications: [
+        {
+            title: 'Building Web Apps',
+            description: 'React is used by Facebook, Instagram, Netflix...',
+            displayOrder: 0,
+        },
+        {
+            title: 'Mobile Development',
+            description: 'React Native allows building mobile apps...',
+            displayOrder: 1,
+        },
+    ],
 
-  // Multiple choice questions
-  questions: [
-    {
-      questionText: "What is React?",
-      displayOrder: 0,
-      choices: [
-        { choiceText: "A JavaScript library", isCorrect: true, displayOrder: 0 },
-        { choiceText: "A database", isCorrect: false, displayOrder: 1 },
-        { choiceText: "A programming language", isCorrect: false, displayOrder: 2 }
-      ]
-    }
-  ]
+    // Multiple choice questions
+    questions: [
+        {
+            questionText: 'What is React?',
+            displayOrder: 0,
+            choices: [
+                { choiceText: 'A JavaScript library', isCorrect: true, displayOrder: 0 },
+                { choiceText: 'A database', isCorrect: false, displayOrder: 1 },
+                { choiceText: 'A programming language', isCorrect: false, displayOrder: 2 },
+            ],
+        },
+    ],
 });
 ```
 
@@ -157,10 +166,11 @@ console.log(lesson.questions); // Array of questions with choices
 ## Migration Steps
 
 1. **Apply SQL migration:**
-   ```bash
-   # The file 04-lesson-enhancements.sql will be automatically executed
-   # when you recreate the database or run migration
-   ```
+
+    ```bash
+    # The file 04-lesson-enhancements.sql will be automatically executed
+    # when you recreate the database or run migration
+    ```
 
 2. **No frontend code changes required** - The API and types are backward compatible. Existing lessons will have empty `applications` and `questions` arrays.
 
@@ -176,37 +186,37 @@ console.log(lesson.questions); // Array of questions with choices
 
 ```json
 {
-  "id": 1,
-  "title": "Introduction to JavaScript",
-  "description": "Learn JavaScript fundamentals",
-  "content": "# JavaScript Basics\n\n...",
-  "category": "Programming",
-  "status": "published",
-  "applications": [
-    {
-      "title": "Web Development",
-      "description": "JavaScript powers interactive websites",
-      "displayOrder": 0
-    }
-  ],
-  "questions": [
-    {
-      "questionText": "What is a variable?",
-      "displayOrder": 0,
-      "choices": [
+    "id": 1,
+    "title": "Introduction to JavaScript",
+    "description": "Learn JavaScript fundamentals",
+    "content": "# JavaScript Basics\n\n...",
+    "category": "Programming",
+    "status": "published",
+    "applications": [
         {
-          "choiceText": "A container for storing data",
-          "isCorrect": true,
-          "displayOrder": 0
-        },
-        {
-          "choiceText": "A type of function",
-          "isCorrect": false,
-          "displayOrder": 1
+            "title": "Web Development",
+            "description": "JavaScript powers interactive websites",
+            "displayOrder": 0
         }
-      ]
-    }
-  ]
+    ],
+    "questions": [
+        {
+            "questionText": "What is a variable?",
+            "displayOrder": 0,
+            "choices": [
+                {
+                    "choiceText": "A container for storing data",
+                    "isCorrect": true,
+                    "displayOrder": 0
+                },
+                {
+                    "choiceText": "A type of function",
+                    "isCorrect": false,
+                    "displayOrder": 1
+                }
+            ]
+        }
+    ]
 }
 ```
 

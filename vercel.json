@@ -1,8 +1,8 @@
 {
-  "version": 2,
-  "installCommand": "cd ui && npm ci",
-  "buildCommand": "cd ui && npm run build",
-  "outputDirectory": "ui/build",
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
-  "ignoreCommand": "if [ \"$VERCEL_GIT_COMMIT_REF\" != \"main\" ]; then echo \"Skipping build for branch $VERCEL_GIT_COMMIT_REF\"; exit 0; else exit 1; fi"
+    "version": 2,
+    "installCommand": "cd ui && npm ci",
+    "buildCommand": "cd ui && npm run build",
+    "outputDirectory": "ui/build",
+    "rewrites": [{ "source": "/(.*)", "destination": "/" }],
+    "ignoreCommand": "if [ \"$VERCEL_GIT_COMMIT_REF\" != \"main\" ]; then echo \"Skipping build for branch $VERCEL_GIT_COMMIT_REF\"; exit 0; else exit 1; fi"
 }

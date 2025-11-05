@@ -6,13 +6,13 @@ import { AppRoutes } from './routes';
 import { queryClient } from './lib/queryClient';
 
 export default function App() {
-  return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <AppRoutes />
-        <Toaster />
-      </BrowserRouter>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
-  );
+    return (
+        <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+                <AppRoutes />
+                <Toaster />
+            </BrowserRouter>
+            <ReactQueryDevtools initialIsOpen={false} />
+        </QueryClientProvider>
+    );
 }

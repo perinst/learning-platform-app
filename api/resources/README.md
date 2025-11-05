@@ -5,25 +5,28 @@ This folder contains project resources that are not part of the main source code
 ## Contents
 
 ### Scripts (`scripts/`)
+
 - **`dev-start.bat`** - Quick setup for development mode
-  - Starts PostgreSQL, PostgREST (exposed), and Adminer
-  - Ready for `npm run dev`
+    - Starts PostgreSQL, PostgREST (exposed), and Adminer
+    - Ready for `npm run dev`
 
 - **`prod-start.bat`** - Quick setup for production mode
-  - Builds and starts all services in Docker
-  - PostgREST is fully isolated (not exposed)
+    - Builds and starts all services in Docker
+    - PostgREST is fully isolated (not exposed)
 
 - **`start-docker.bat`** - Legacy startup script (deprecated, use prod-start.bat)
 
 ### Database (`db/`)
+
 - **`db/init/`** - PostgreSQL initialization scripts
-  - `01-schema.sql` - Database schema and functions
-  - `02-seed.sql` - Mock data
-  - `03-functions-demo.sql` - Example queries
+    - `01-schema.sql` - Database schema and functions
+    - `02-seed.sql` - Mock data
+    - `03-functions-demo.sql` - Example queries
 
 ## Usage
 
 ### Development Mode
+
 ```bash
 # From project root
 .\resources\scripts\dev-start.bat
@@ -33,6 +36,7 @@ npm run dev
 ```
 
 ### Production Mode
+
 ```bash
 # From project root
 .\resources\scripts\prod-start.bat
@@ -47,6 +51,7 @@ The database initialization scripts are automatically executed when PostgreSQL s
 3. **03-functions-demo.sql** - Example queries for reference
 
 To reset the database:
+
 ```bash
 docker-compose down -v
 docker-compose up -d

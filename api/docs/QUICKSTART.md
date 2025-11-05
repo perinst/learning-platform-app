@@ -5,11 +5,13 @@
 ### Option 1: Fix PowerShell (Recommended)
 
 Run PowerShell as Administrator:
+
 ```powershell
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
 Then:
+
 ```bash
 npm install
 npm run dev
@@ -18,6 +20,7 @@ npm run dev
 ### Option 2: Use CMD
 
 Open Command Prompt (cmd.exe):
+
 ```cmd
 cd c:\CODE\CT-TP\learning-platform-api
 npm install
@@ -44,6 +47,7 @@ After running `npm run dev`, you should see:
 ## Test It
 
 ### 1. Login (Public Route)
+
 ```bash
 curl -X POST http://localhost:4000/rpc/verify_login ^
   -H "Content-Type: application/json" ^
@@ -53,21 +57,24 @@ curl -X POST http://localhost:4000/rpc/verify_login ^
 Copy the `access_token` from the response.
 
 ### 2. Access Protected Route
+
 ```bash
 curl http://localhost:4000/lessons ^
   -H "Authorization: Bearer <paste_token_here>"
 ```
 
 ### 3. Try Without Token (Should Fail)
+
 ```bash
 curl http://localhost:4000/lessons
 ```
 
 Should return:
+
 ```json
 {
-  "error": "Unauthorized",
-  "message": "Missing or invalid Authorization header. Use: Bearer <token>"
+    "error": "Unauthorized",
+    "message": "Missing or invalid Authorization header. Use: Bearer <token>"
 }
 ```
 
@@ -82,12 +89,12 @@ Should return:
 
 ## Services
 
-| Service | Port | Access |
-|---------|------|--------|
-| Express Proxy | 4000 | Public (with auth) |
-| PostgREST | 3001 | Internal Docker network only |
-| PostgreSQL | 5432 | Docker network + localhost |
-| Adminer | 8080 | Public (database UI) |
+| Service       | Port | Access                       |
+| ------------- | ---- | ---------------------------- |
+| Express Proxy | 4000 | Public (with auth)           |
+| PostgREST     | 3001 | Internal Docker network only |
+| PostgreSQL    | 5432 | Docker network + localhost   |
+| Adminer       | 8080 | Public (database UI)         |
 
 ## Next Steps
 

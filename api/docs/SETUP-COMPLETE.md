@@ -3,12 +3,14 @@
 ## What You Have Now:
 
 ### 🔧 Development Mode (Current)
+
 - ✅ PostgreSQL running
 - ✅ PostgREST **EXPOSED** on port 3001
 - ✅ Adminer running
 - ⏳ Ready for `npm run dev`
 
 ### 🚀 Production Mode (Available)
+
 - 🔒 PostgREST **BLOCKED** (internal only)
 - 🐳 Express runs in Docker
 - 🔐 Full security isolation
@@ -59,11 +61,13 @@ curl http://localhost:4000/health
 ### 1. Start Express (Development Mode)
 
 Open a **new terminal** and run:
+
 ```bash
 npm run dev
 ```
 
 You should see:
+
 ```
 🚀 Auth Proxy Server running on port 4000
 📡 Proxying to PostgREST at http://localhost:3001
@@ -137,10 +141,10 @@ curl http://localhost:4000/health
 
 ## Summary
 
-| Mode | Command | PostgREST Access | Express Location |
-|------|---------|------------------|------------------|
-| **Dev** | `.\.\\resources\\dev-start.bat` then `npm run dev` | ⚠️ Exposed (localhost:3001) | Host (hot reload) |
-| **Prod** | `.\.\\resources\\prod-start.bat` | ✅ Blocked (internal only) | Docker (secure) |
+| Mode     | Command                                            | PostgREST Access            | Express Location  |
+| -------- | -------------------------------------------------- | --------------------------- | ----------------- |
+| **Dev**  | `.\.\\resources\\dev-start.bat` then `npm run dev` | ⚠️ Exposed (localhost:3001) | Host (hot reload) |
+| **Prod** | `.\.\\resources\\prod-start.bat`                   | ✅ Blocked (internal only)  | Docker (secure)   |
 
 ## Files Created:
 
@@ -150,7 +154,7 @@ curl http://localhost:4000/health
 ✅ `.env.production` - Production environment variables  
 ✅ `.\\resources\\dev-start.bat` - Quick dev setup  
 ✅ `.\\resources\\prod-start.bat` - Quick prod setup  
-✅ `DEV-PROD-GUIDE.md` - Complete documentation  
+✅ `DEV-PROD-GUIDE.md` - Complete documentation
 
 ## Next Steps:
 

@@ -1,6 +1,7 @@
 # API Integration Migration Summary
 
 ## Overview
+
 Successfully migrated the learning platform UI from mock localStorage-based API to real PostgreSQL + PostgREST backend with Express authentication proxy.
 
 ## Changes Made
@@ -8,16 +9,19 @@ Successfully migrated the learning platform UI from mock localStorage-based API 
 ### 1. Configuration Files Created
 
 #### `.env.example`
+
 ```env
 VITE_API_URL=http://localhost:4000
 ```
 
 #### `.env.local` (for development)
+
 ```env
 VITE_API_URL=http://localhost:4000
 ```
 
 #### `src/config/api.config.ts`
+
 - Base URL configuration: `http://localhost:4000`
 - Timeout: 10 seconds
 - Storage keys for access token and user data
@@ -25,7 +29,9 @@ VITE_API_URL=http://localhost:4000
 ### 2. Type Definitions
 
 #### `src/types/api.types.ts`
+
 New types matching PostgreSQL schema:
+
 - `User` - with `created_at` (snake_case from backend)
 - `Lesson` - with `image_url`, `created_at`, `created_by`
 - `Progress` - with `user_id`, `lesson_id`, `last_accessed`
@@ -37,6 +43,7 @@ New types matching PostgreSQL schema:
 Complete rewrite to use real HTTP requests:
 
 #### Authentication API
+
 - ✅ `getCurrentUser()` - Validates token with backend, returns cached user
 - ✅ `login()` - POST to `/rpc/verify_login`, stores JWT token
 - ✅ `logout()` - Clears token and user data from localStorage
@@ -44,6 +51,7 @@ Complete rewrite to use real HTTP requests:
 - ✅ `getUsers()` - GET `/users` with authentication
 
 #### Lessons API
+
 - ✅ `getLessons()` - GET `/lessons?order=created_at.desc`
 - ✅ `getLesson(id)` - GET `/lessons?id=eq.{id}`
 - ✅ `createLesson()` - POST `/rpc/create_lesson` (admin only, uses token from context)
@@ -51,6 +59,7 @@ Complete rewrite to use real HTTP requests:
 - ✅ `deleteLesson()` - POST `/rpc/delete_lesson` (admin only)
 
 #### Progress API
+
 - ✅ `getProgress()` - GET `/progress`
 - ✅ `getUserProgress(userId)` - GET `/progress?user_id=eq.{userId}`
 - ✅ `getLessonProgress(userId, lessonId)` - GET with filters
@@ -60,12 +69,14 @@ Complete rewrite to use real HTTP requests:
 ### 4. Authentication Flow
 
 **Before (Mock):**
+
 ```typescript
 // Checked localStorage only
 const user = localStorage.getItem('currentUser');
 ```
 
 **After (Real Backend):**
+
 ```typescript
 // 1. Login -> Get JWT token
 POST /rpc/verify_login { p_email, p_password }
@@ -92,6 +103,7 @@ GET /users?id=eq.{user_id}
 ### 6. Data Model Changes
 
 #### User
+
 ```typescript
 // Frontend (camelCase)
 interface User {
@@ -114,54 +126,62 @@ interface User {
 ```
 
 #### Lesson
+
 ```typescript
 // Frontend
-imageUrl, createdAt, createdBy
+(imageUrl, createdAt, createdBy);
 
 // Backend
-image_url, created_at, created_by
+(image_url, created_at, created_by);
 ```
 
 #### Progress
+
 ```typescript
 // Frontend
-userId, lessonId, lastAccessed
+(userId, lessonId, lastAccessed);
 
 // Backend
-user_id, lesson_id, last_accessed
+(user_id, lesson_id, last_accessed);
 ```
 
 ### 7. Hook Updates
 
 #### `useLessons.ts`
+
 - Removed `userId` parameter from `useCreateLesson()` (backend gets user from token)
 
 #### Components Updated
+
 - `LessonEditor.tsx` - Removed `userId` from `createLessonMutation.mutateAsync()`
 
 ### 8. Storage Keys Changed
 
 **Before:**
+
 ```typescript
-CURRENT_USER: 'currentUser'
-LESSONS: 'lessons'
-PROGRESS: 'progress'
+CURRENT_USER: 'currentUser';
+LESSONS: 'lessons';
+PROGRESS: 'progress';
 ```
 
 **After:**
+
 ```typescript
-ACCESS_TOKEN: 'access_token'
-USER_DATA: 'user_data'
+ACCESS_TOKEN: 'access_token';
+USER_DATA: 'user_data';
 // No more client-side data storage
 ```
 
 ## Backend Integration Points
 
 ### Public Endpoints (No Auth Required)
+
 - `POST /rpc/register_user` - User registration
 - `POST /rpc/verify_login` - User login
 
 ### Protected Endpoints (Require Bearer Token)
+
 - `GET /users` - List all users
 - `GET /lessons` - List lessons
 - `GET /lessons?id=eq.{id}` - Get specific lesson
@@ -170,6 +190,7 @@ USER_DATA: 'user_data'
 - `POST /progress` - Update progress (upsert)
 
 ### Admin-Only Endpoints
+
 - `POST /rpc/create_lesson` - Create lesson
 - `POST /rpc/update_lesson` - Update lesson
 - `POST /rpc/delete_lesson` - Delete lesson
@@ -177,6 +198,7 @@ USER_DATA: 'user_data'
 ## Testing the Integration
 
 ### 1. Start Backend Services
+
 ```bash
 cd ..\learning-platform-api
 docker-compose up -d
@@ -184,24 +206,28 @@ npm run dev
 ```
 
 ### 2. Start Frontend
+
 ```bash
 cd learning-platform-ui
 npm run dev
 ```
 
 ### 3. Test Login
+
 - Navigate to http://localhost:5173
 - Login with: `admin@example.com` / `admin123`
 - Check browser DevTools > Application > Local Storage
-  - Should see `access_token` with JWT
-  - Should see `user_data` with user object
+    - Should see `access_token` with JWT
+    - Should see `user_data` with user object
 
 ### 4. Test Data Loading
+
 - Dashboard should load real lessons from PostgreSQL
 - Progress should be fetched from backend
 - Changes persist in database
 
 ### 5. Test Admin Functions (as admin)
+
 - Create new lesson → POST /rpc/create_lesson
 - Edit lesson → POST /rpc/update_lesson
 - Delete lesson → POST /rpc/delete_lesson
@@ -209,16 +235,18 @@ npm run dev
 ## Error Handling
 
 The new API includes proper error handling:
+
 ```typescript
 try {
-  await authApi.login(email, password);
+    await authApi.login(email, password);
 } catch (error) {
-  // error.message contains backend error
-  toast.error(error.message);
+    // error.message contains backend error
+    toast.error(error.message);
 }
 ```
 
 Common errors:
+
 - `401 Unauthorized` - Missing or invalid token
 - `403 Forbidden` - Admin access required
 - `404 Not Found` - Resource doesn't exist
@@ -246,11 +274,13 @@ Common errors:
 ## Development vs Production
 
 ### Development
+
 - Frontend: `http://localhost:5173` (Vite)
 - Backend: `http://localhost:4000` (Express Auth Proxy)
 - Database: `localhost:5432` (PostgreSQL)
 
 ### Production (Future)
+
 - Frontend: Static hosting (Vercel, Netlify, etc.)
 - Backend: Deployed Express + PostgREST + PostgreSQL
 - HTTPS with proper SSL certificates
@@ -259,6 +289,7 @@ Common errors:
 ## Rollback Plan (If Needed)
 
 The old mock implementation is commented out in git history. To rollback:
+
 1. Restore `src/api/index.ts` from previous commit
 2. Remove `.env.local` and `src/config/api.config.ts`
 3. Revert `src/utils/mockData.ts` User interface change

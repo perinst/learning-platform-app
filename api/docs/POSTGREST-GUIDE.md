@@ -11,6 +11,7 @@ docker-compose up -d
 ```
 
 This starts:
+
 - **PostgreSQL** on port 5432
 - **PostgREST API** on port 4000 (auto-generated!)
 - **Adminer UI** on port 8080
@@ -36,19 +37,21 @@ curl -X POST http://localhost:4000/rpc/verify_login \
 ```
 
 **Response (success):**
+
 ```json
 [
-  {
-    "user_id": "uuid-here",
-    "user_email": "user@example.com",
-    "user_name": "John Doe",
-    "user_role": "user",
-    "user_created_at": "2024-01-15T00:00:00Z"
-  }
+    {
+        "user_id": "uuid-here",
+        "user_email": "user@example.com",
+        "user_name": "John Doe",
+        "user_role": "user",
+        "user_created_at": "2024-01-15T00:00:00Z"
+    }
 ]
 ```
 
 **Response (wrong password):**
+
 ```json
 []
 ```
@@ -62,15 +65,16 @@ curl -X POST http://localhost:4000/rpc/register_user \
 ```
 
 **Response:**
+
 ```json
 [
-  {
-    "user_id": "new-uuid",
-    "user_email": "newuser@example.com",
-    "user_name": "New User",
-    "user_role": "user",
-    "user_created_at": "2025-10-20T..."
-  }
+    {
+        "user_id": "new-uuid",
+        "user_email": "newuser@example.com",
+        "user_name": "New User",
+        "user_role": "user",
+        "user_created_at": "2025-10-20T..."
+    }
 ]
 ```
 
@@ -83,11 +87,13 @@ curl -X POST http://localhost:4000/rpc/change_password \
 ```
 
 **Response (success):**
+
 ```json
 true
 ```
 
 **Response (wrong old password):**
+
 ```json
 false
 ```
@@ -144,11 +150,11 @@ curl "http://localhost:4000/chat_messages?lesson_id=eq.00000000-0000-0000-0000-0
 
 ## 🧪 Test Accounts
 
-| Email | Password | Role |
-|-------|----------|------|
+| Email             | Password | Role  |
+| ----------------- | -------- | ----- |
 | admin@example.com | admin123 | admin |
-| user@example.com | user123 | user |
-| jane@example.com | user123 | user |
+| user@example.com  | user123  | user  |
+| jane@example.com  | user123  | user  |
 
 ---
 
@@ -156,18 +162,18 @@ curl "http://localhost:4000/chat_messages?lesson_id=eq.00000000-0000-0000-0000-0
 
 PostgREST supports powerful query operators:
 
-| Operator | Example | Description |
-|----------|---------|-------------|
-| `eq` | `?name=eq.John` | Equals |
-| `neq` | `?status=neq.draft` | Not equals |
-| `gt` | `?progress=gt.50` | Greater than |
-| `gte` | `?progress=gte.50` | Greater than or equal |
-| `lt` | `?progress=lt.100` | Less than |
-| `lte` | `?progress=lte.100` | Less than or equal |
-| `like` | `?title=like.*React*` | Pattern matching |
-| `ilike` | `?title=ilike.*react*` | Case-insensitive pattern |
-| `in` | `?role=in.(user,admin)` | In list |
-| `is` | `?summary=is.null` | Is null |
+| Operator | Example                 | Description              |
+| -------- | ----------------------- | ------------------------ |
+| `eq`     | `?name=eq.John`         | Equals                   |
+| `neq`    | `?status=neq.draft`     | Not equals               |
+| `gt`     | `?progress=gt.50`       | Greater than             |
+| `gte`    | `?progress=gte.50`      | Greater than or equal    |
+| `lt`     | `?progress=lt.100`      | Less than                |
+| `lte`    | `?progress=lte.100`     | Less than or equal       |
+| `like`   | `?title=like.*React*`   | Pattern matching         |
+| `ilike`  | `?title=ilike.*react*`  | Case-insensitive pattern |
+| `in`     | `?role=in.(user,admin)` | In list                  |
+| `is`     | `?summary=is.null`      | Is null                  |
 
 ### Examples:
 
@@ -274,6 +280,7 @@ PostgREST auto-generates OpenAPI docs:
 http://localhost:4000
 
 **Download OpenAPI spec:**
+
 ```bash
 curl http://localhost:4000 > api-spec.json
 ```
@@ -306,11 +313,11 @@ curl http://localhost:4000
 
 ## 🔗 Service URLs
 
-| Service | URL | Purpose |
-|---------|-----|---------|
+| Service       | URL                   | Purpose                 |
+| ------------- | --------------------- | ----------------------- |
 | PostgREST API | http://localhost:4000 | Auto-generated REST API |
-| Adminer | http://localhost:8080 | Database UI |
-| PostgreSQL | localhost:5432 | Direct database access |
+| Adminer       | http://localhost:8080 | Database UI             |
+| PostgreSQL    | localhost:5432        | Direct database access  |
 
 ---
 

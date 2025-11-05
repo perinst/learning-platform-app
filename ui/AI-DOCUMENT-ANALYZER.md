@@ -8,17 +8,18 @@ This feature allows you to upload PDF or DOCX files and automatically generate l
 - ✅ Extract text from documents
 - ✅ Analyze content with DeepSeek AI
 - ✅ Auto-fill lesson form with:
-  - Title
-  - Description
-  - Content (Markdown formatted)
-  - Category
-  - Summary
-  - Applications (real-world use cases)
-  - Questions (multiple choice with answers)
+    - Title
+    - Description
+    - Content (Markdown formatted)
+    - Category
+    - Summary
+    - Applications (real-world use cases)
+    - Questions (multiple choice with answers)
 
 ## Current Implementation
 
 The feature is **already working** with:
+
 - ✅ **DOCX files** (basic text extraction)
 - ✅ **TXT files** (plain text)
 - ✅ **DeepSeek AI integration**
@@ -48,21 +49,23 @@ Then update `src/components/DocumentUploader.tsx` to use the full implementation
 ## API Key
 
 The DeepSeek API key is already configured in the code:
+
 ```
 sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 ⚠️ **For production**, move this to environment variables:
+
 - Create `.env` file in `ui/` folder
 - Add: `VITE_DEEPSEEK_API_KEY=your-key-here`
 - Update code to use: `import.meta.env.VITE_DEEPSEEK_API_KEY`
 
 ## Supported File Types
 
-| Type | Status | Notes |
-|------|--------|-------|
-| DOCX | ✅ Working | Basic text extraction |
-| TXT  | ✅ Working | Full support |
+| Type | Status      | Notes                         |
+| ---- | ----------- | ----------------------------- |
+| DOCX | ✅ Working  | Basic text extraction         |
+| TXT  | ✅ Working  | Full support                  |
 | PDF  | ⚠️ Optional | Requires `pdfjs-dist` package |
 
 ## Example Workflow
@@ -70,22 +73,25 @@ sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 1. **Upload**: Drop a course material DOCX file
 2. **AI Analysis**: DeepSeek reads and structures the content
 3. **Auto-fill**:
-   - Title: "Introduction to React Hooks"
-   - Category: "Programming"
-   - Content: Formatted Markdown with sections
-   - Applications: Real-world use cases
-   - Questions: 5 quiz questions with answers
+    - Title: "Introduction to React Hooks"
+    - Category: "Programming"
+    - Content: Formatted Markdown with sections
+    - Applications: Real-world use cases
+    - Questions: 5 quiz questions with answers
 4. **Save**: Review and publish the lesson
 
 ## Troubleshooting
 
 **Issue**: "Could not extract readable text from DOCX"
+
 - Solution: File may be empty or image-based. Use a text-based DOCX.
 
 **Issue**: "DeepSeek API error: 401"
+
 - Solution: Check API key is valid and has credits.
 
 **Issue**: "Invalid JSON response from AI"
+
 - Solution: Content may be too complex. Try with simpler text or shorter document.
 
 ## Advanced: Customize AI Prompt

@@ -5,6 +5,7 @@
 ### 📁 File Organization
 
 **Created `resources/` folder** for scripts and database initialization:
+
 ```
 resources/
 ├── db/
@@ -19,6 +20,7 @@ resources/
 ```
 
 **Created `docs/` folder** for all documentation:
+
 ```
 docs/
 ├── README.md (index)
@@ -37,23 +39,24 @@ docs/
 ### 🔧 Updated Files
 
 1. **docker-compose.yml**
-   - Updated database volume: `./db/init` → `./resources/db/init`
+    - Updated database volume: `./db/init` → `./resources/db/init`
 
 2. **docker-compose.dev.yml**
-   - Updated database volume: `./db/init` → `./resources/db/init`
+    - Updated database volume: `./db/init` → `./resources/db/init`
 
 3. **All Documentation Files**
-   - Updated batch script references: `.\dev-start.bat` → `.\\resources\\scripts\\dev-start.bat`
-   - Updated batch script references: `.\prod-start.bat` → `.\\resources\\scripts\\prod-start.bat`
-   - Files updated: All 11 markdown files in docs/ folder + README.md
+    - Updated batch script references: `.\dev-start.bat` → `.\\resources\\scripts\\dev-start.bat`
+    - Updated batch script references: `.\prod-start.bat` → `.\\resources\\scripts\\prod-start.bat`
+    - Files updated: All 11 markdown files in docs/ folder + README.md
 
 4. **Batch Files**
-   - Added `pause` command to `resources/dev-start.bat` for better UX
-   - Added `pause` command to `resources/prod-start.bat` for better UX
+    - Added `pause` command to `resources/dev-start.bat` for better UX
+    - Added `pause` command to `resources/prod-start.bat` for better UX
 
 ### ✅ Verification
 
 All paths have been updated and verified:
+
 - ✅ 39 documentation references updated
 - ✅ Docker compose files point to `./resources/db/init`
 - ✅ Batch files include pause commands
@@ -92,12 +95,14 @@ learning-platform-api/
 ### Quick Start Commands
 
 **Development Mode:**
+
 ```bash
 .\\resources\\scripts\\dev-start.bat
 npm run dev
 ```
 
 **Production Mode:**
+
 ```bash
 .\\resources\\scripts\\prod-start.bat
 ```
@@ -111,6 +116,7 @@ npm run dev
 ## What Changed for Users
 
 ### Before
+
 ```bash
 .\dev-start.bat          # Scripts in root
 .\prod-start.bat         # Mixed with source code
@@ -118,6 +124,7 @@ npm run dev
 ```
 
 ### After
+
 ```bash
 .\\resources\\scripts\\dev-start.bat     # Organized in resources/
 .\\resources\\scripts\\prod-start.bat    # Clear separation

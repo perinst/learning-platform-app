@@ -11,13 +11,13 @@ Tài liệu này mô tả quy trình triển khai production cho toàn bộ hệ
 ## 1) Kiến trúc triển khai
 
 - Backend (trong Docker):
-  - PostgreSQL (dữ liệu persist qua volume).
-  - PostgREST (nội bộ, không expose ra host).
-  - Express API (expose cổng 4000 ra host).
-  - Adminer (tùy chọn, expose 8080 — chỉ dùng tạm thời để quản trị).
+    - PostgreSQL (dữ liệu persist qua volume).
+    - PostgREST (nội bộ, không expose ra host).
+    - Express API (expose cổng 4000 ra host).
+    - Adminer (tùy chọn, expose 8080 — chỉ dùng tạm thời để quản trị).
 - Frontend (khuyến nghị 1 trong 2):
-  - Static hosting (Vercel/Netlify/S3+CloudFront/Nginx) — build ở CI/CD rồi deploy static files.
-  - Dockerized Nginx phục vụ static build và reverse proxy đến API.
+    - Static hosting (Vercel/Netlify/S3+CloudFront/Nginx) — build ở CI/CD rồi deploy static files.
+    - Dockerized Nginx phục vụ static build và reverse proxy đến API.
 
 Networking:
 
@@ -34,20 +34,19 @@ Networking:
 ## 3) Chuẩn bị biến môi trường
 
 - Backend (API):
-
-  - Sao chép và điền file `.env` dựa trên `api/.env.example` (nếu có). Nếu không, dùng biến môi trường trực tiếp trong Compose (đã đặt sẵn trong [api/docker-compose.yml](../api/docker-compose.yml)):
-    - DB_HOST=postgres
-    - DB_PORT=5432
-    - DB_NAME=learning_platform
-    - DB_USER=postgres
-    - DB_PASSWORD=postgres (Khuyến nghị: thay bằng secret thực tế; có thể chuyển sang Docker secrets)
-    - POSTGREST_URL=http://learning-platform-postgrest:3000
-    - PORT=4000
-    - NODE_ENV=production
+    - Sao chép và điền file `.env` dựa trên `api/.env.example` (nếu có). Nếu không, dùng biến môi trường trực tiếp trong Compose (đã đặt sẵn trong [api/docker-compose.yml](../api/docker-compose.yml)):
+        - DB_HOST=postgres
+        - DB_PORT=5432
+        - DB_NAME=learning_platform
+        - DB_USER=postgres
+        - DB_PASSWORD=postgres (Khuyến nghị: thay bằng secret thực tế; có thể chuyển sang Docker secrets)
+        - POSTGREST_URL=http://learning-platform-postgrest:3000
+        - PORT=4000
+        - NODE_ENV=production
 
 - Frontend (UI):
-  - Sao chép `ui/.env.example` thành `.env` và điền các biến (ví dụ REACT_APP_API_URL hoặc VITE_API_URL tùy toolchain).
-  - Với static build, biến môi trường được bake vào lúc build.
+    - Sao chép `ui/.env.example` thành `.env` và điền các biến (ví dụ REACT_APP_API_URL hoặc VITE_API_URL tùy toolchain).
+    - Với static build, biến môi trường được bake vào lúc build.
 
 ## 4) Triển khai Backend (DB + PostgREST + Express API)
 
@@ -59,25 +58,25 @@ Các file cốt lõi:
 Bước thực hiện trên máy chủ:
 
 1. Clone code và chuyển thư mục:
-   ```sh
-   cd api
-   ```
+    ```sh
+    cd api
+    ```
 2. Khởi chạy stack:
-   ```sh
-   docker compose -f docker-compose.yml up -d --build
-   ```
+    ```sh
+    docker compose -f docker-compose.yml up -d --build
+    ```
 3. Kiểm tra health:
-   - API healthcheck: Dockerfile đã cấu hình kiểm tra HTTP GET đến /health. Đảm bảo route `/health` trả về 200.
-   - Kiểm tra container:
-     ```sh
-     docker ps
-     docker logs -f learning-platform-express
-     docker logs -f learning-platform-db
-     docker logs -f learning-platform-postgrest
-     ```
+    - API healthcheck: Dockerfile đã cấu hình kiểm tra HTTP GET đến /health. Đảm bảo route `/health` trả về 200.
+    - Kiểm tra container:
+        ```sh
+        docker ps
+        docker logs -f learning-platform-express
+        docker logs -f learning-platform-db
+        docker logs -f learning-platform-postgrest
+        ```
 4. Khởi tạo DB:
-   - Compose đã mount `./resources/db/init` vào `/docker-entrypoint-initdb.d`. Các script .sql trong thư mục đó sẽ chạy lần đầu khi volume data trống.
-   - Với các thay đổi schema sau này, hãy tạo script migration và chạy thủ công (hoặc dùng công cụ migration chuyên dụng).
+    - Compose đã mount `./resources/db/init` vào `/docker-entrypoint-initdb.d`. Các script .sql trong thư mục đó sẽ chạy lần đầu khi volume data trống.
+    - Với các thay đổi schema sau này, hãy tạo script migration và chạy thủ công (hoặc dùng công cụ migration chuyên dụng).
 
 Ghi chú bảo mật:
 
@@ -87,13 +86,13 @@ Ghi chú bảo mật:
 Backup/Restore:
 
 - Backup:
-  ```sh
-  docker exec -t learning-platform-db pg_dump -U postgres learning_platform > backup_$(date +%F).sql
-  ```
+    ```sh
+    docker exec -t learning-platform-db pg_dump -U postgres learning_platform > backup_$(date +%F).sql
+    ```
 - Restore:
-  ```sh
-  cat backup.sql | docker exec -i learning-platform-db psql -U postgres -d learning_platform
-  ```
+    ```sh
+    cat backup.sql | docker exec -i learning-platform-db psql -U postgres -d learning_platform
+    ```
 
 Cập nhật (zero-downtime cơ bản):
 
@@ -119,9 +118,9 @@ Triển khai:
 
 - Vercel/Netlify: kết nối repo, set biến môi trường build, trỏ domain.
 - S3+CloudFront:
-  - Upload thư mục build (dist) lên S3 (static website hosting).
-  - Tạo CloudFront distribution trỏ đến S3 origin, bật gzip/brotli.
-  - Thiết lập domain và chứng chỉ ACM.
+    - Upload thư mục build (dist) lên S3 (static website hosting).
+    - Tạo CloudFront distribution trỏ đến S3 origin, bật gzip/brotli.
+    - Thiết lập domain và chứng chỉ ACM.
 
 Kết nối API:
 
@@ -217,36 +216,36 @@ api.example.com {
 ## 6) CI/CD (khuyến nghị)
 
 - Build & Push images:
-  - API: build từ [api/Dockerfile](../api/Dockerfile), tag và push vào registry (ghcr.io, Docker Hub).
-  - UI: build từ `ui/Dockerfile`, push image.
+    - API: build từ [api/Dockerfile](../api/Dockerfile), tag và push vào registry (ghcr.io, Docker Hub).
+    - UI: build từ `ui/Dockerfile`, push image.
 - Deploy:
-  - Máy chủ pull image mới và `docker compose up -d` (có thể chạy tự động qua SSH hoặc GitHub Actions self-hosted runner).
+    - Máy chủ pull image mới và `docker compose up -d` (có thể chạy tự động qua SSH hoặc GitHub Actions self-hosted runner).
 
 Ví dụ workflow rút gọn (API):
 
 ```yaml
 name: api-ci
 on:
-  push:
-    paths:
-      - "api/**"
-    branches: [main]
+    push:
+        paths:
+            - 'api/**'
+        branches: [main]
 jobs:
-  build-and-push:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
-      - uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - uses: docker/build-push-action@v6
-        with:
-          context: api
-          push: true
-          tags: ghcr.io/OWNER/learning-platform-api:latest
+    build-and-push:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - uses: docker/setup-buildx-action@v3
+            - uses: docker/login-action@v3
+              with:
+                  registry: ghcr.io
+                  username: ${{ github.actor }}
+                  password: ${{ secrets.GITHUB_TOKEN }}
+            - uses: docker/build-push-action@v6
+              with:
+                  context: api
+                  push: true
+                  tags: ghcr.io/OWNER/learning-platform-api:latest
 ```
 
 Triển khai qua SSH (rút gọn):
@@ -255,32 +254,32 @@ Triển khai qua SSH (rút gọn):
 - name: Deploy
   uses: appleboy/ssh-action@v1.0.3
   with:
-    host: ${{ secrets.HOST }}
-    username: ${{ secrets.USER }}
-    key: ${{ secrets.SSH_KEY }}
-    script: |
-      cd /opt/learning-platform/api
-      docker compose pull
-      docker compose up -d
-      docker system prune -f
+      host: ${{ secrets.HOST }}
+      username: ${{ secrets.USER }}
+      key: ${{ secrets.SSH_KEY }}
+      script: |
+          cd /opt/learning-platform/api
+          docker compose pull
+          docker compose up -d
+          docker system prune -f
 ```
 
 ## 7) Vận hành & Giám sát
 
 - Logs:
-  ```sh
-  docker logs -f learning-platform-express
-  docker logs -f learning-platform-db
-  docker logs -f learning-platform-postgrest
-  docker logs -f learning-platform-frontend
-  ```
+    ```sh
+    docker logs -f learning-platform-express
+    docker logs -f learning-platform-db
+    docker logs -f learning-platform-postgrest
+    docker logs -f learning-platform-frontend
+    ```
 - Tài nguyên:
-  ```sh
-  docker stats
-  ```
+    ```sh
+    docker stats
+    ```
 - Nâng cấp DB minor:
-  - Snapshot volume hoặc backup bằng `pg_dump`.
-  - Test nâng cấp ở staging trước.
+    - Snapshot volume hoặc backup bằng `pg_dump`.
+    - Test nâng cấp ở staging trước.
 
 ## 8) Checklist nhanh
 
@@ -295,15 +294,15 @@ Triển khai qua SSH (rút gọn):
 ## 9) Lệnh chạy nhanh (single host)
 
 - Backend:
-  ```sh
-  cd api
-  docker compose up -d --build
-  ```
+    ```sh
+    cd api
+    docker compose up -d --build
+    ```
 - Frontend (Dockerized Nginx):
-  ```sh
-  cd api
-  docker compose up -d --build frontend
-  ```
+    ```sh
+    cd api
+    docker compose up -d --build frontend
+    ```
 
 Tham khảo thêm trong:
 

@@ -1,104 +1,104 @@
 export interface User {
-  id: string;
-  email: string;
-  password?: string; // Optional - not returned from API, only used for mock login
-  name: string;
-  role: 'user' | 'admin';
-  createdAt: Date;
+    id: string;
+    email: string;
+    password?: string; // Optional - not returned from API, only used for mock login
+    name: string;
+    role: 'user' | 'admin';
+    createdAt: Date;
 }
 
 export interface QuestionChoice {
-  id?: number;
-  choiceText: string;
-  isCorrect: boolean;
-  displayOrder: number;
+    id?: number;
+    choiceText: string;
+    isCorrect: boolean;
+    displayOrder: number;
 }
 
 export interface LessonQuestion {
-  id?: number;
-  questionText: string;
-  displayOrder: number;
-  choices: QuestionChoice[];
+    id?: number;
+    questionText: string;
+    displayOrder: number;
+    choices: QuestionChoice[];
 }
 
 export interface LessonApplication {
-  id?: number;
-  title: string;
-  description: string;
-  displayOrder: number;
+    id?: number;
+    title: string;
+    description: string;
+    displayOrder: number;
 }
 
 export interface Lesson {
-  id: number;
-  title: string;
-  description: string;
-  content: string;
-  category: string;
-  status: 'draft' | 'published';
-  createdBy: string;
-  createdAt: Date;
-  summary?: string;
-  imageUrl?: string;
-  applications?: LessonApplication[];
-  questions?: LessonQuestion[];
+    id: number;
+    title: string;
+    description: string;
+    content: string;
+    category: string;
+    status: 'draft' | 'published';
+    createdBy: string;
+    createdAt: Date;
+    summary?: string;
+    imageUrl?: string;
+    applications?: LessonApplication[];
+    questions?: LessonQuestion[];
 }
 
 export interface Progress {
-  userId: string;
-  lessonId: number;
-  completed: boolean;
-  lastAccessed: Date;
-  progress: number;
+    userId: string;
+    lessonId: number;
+    completed: boolean;
+    lastAccessed: Date;
+    progress: number;
 }
 
 export interface ChatMessage {
-  id: number;
-  role: 'user' | 'assistant';
-  content: string;
-  timestamp: Date;
+    id: number;
+    role: 'user' | 'assistant';
+    content: string;
+    timestamp: Date;
 }
 
 export interface ChatHistory {
-  userId: string;
-  lessonId: number;
-  messages: ChatMessage[];
+    userId: string;
+    lessonId: number;
+    messages: ChatMessage[];
 }
 
 // Mock users
 export const mockUsers: User[] = [
-  {
-    id: '1',
-    email: 'admin@example.com',
-    password: 'admin123',
-    name: 'Admin User',
-    role: 'admin',
-    createdAt: new Date('2024-01-01')
-  },
-  {
-    id: '2',
-    email: 'user@example.com',
-    password: 'user123',
-    name: 'John Doe',
-    role: 'user',
-    createdAt: new Date('2024-01-15')
-  },
-  {
-    id: '3',
-    email: 'jane@example.com',
-    password: 'user123',
-    name: 'Jane Smith',
-    role: 'user',
-    createdAt: new Date('2024-02-01')
-  }
+    {
+        id: '1',
+        email: 'admin@example.com',
+        password: 'admin123',
+        name: 'Admin User',
+        role: 'admin',
+        createdAt: new Date('2024-01-01'),
+    },
+    {
+        id: '2',
+        email: 'user@example.com',
+        password: 'user123',
+        name: 'John Doe',
+        role: 'user',
+        createdAt: new Date('2024-01-15'),
+    },
+    {
+        id: '3',
+        email: 'jane@example.com',
+        password: 'user123',
+        name: 'Jane Smith',
+        role: 'user',
+        createdAt: new Date('2024-02-01'),
+    },
 ];
 
 // Mock lessons
 export const mockLessons: Lesson[] = [
-  {
-    id: 1,
-    title: 'Introduction to React',
-    description: 'Learn the fundamentals of React and component-based architecture',
-    content: `# Introduction to React
+    {
+        id: 1,
+        title: 'Introduction to React',
+        description: 'Learn the fundamentals of React and component-based architecture',
+        content: `# Introduction to React
 
 React is a popular JavaScript library for building user interfaces, particularly single-page applications. It was developed by Facebook and is maintained by Facebook and a community of individual developers and companies.
 
@@ -129,18 +129,20 @@ function Welcome(props) {
 ## Virtual DOM
 
 React uses a Virtual DOM to optimize rendering. Instead of updating the entire DOM, React calculates the minimal changes needed and updates only those parts.`,
-    category: 'Web Development',
-    status: 'published',
-    createdBy: '1',
-    createdAt: new Date('2024-01-10'),
-    summary: 'This lesson covers the fundamentals of React including components, JSX, props, state, and the Virtual DOM. Perfect for beginners starting their React journey.',
-    imageUrl: 'https://images.unsplash.com/photo-1569693799105-4eb645d89aea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9ncmFtbWluZyUyMGNvZGUlMjBsYXB0b3B8ZW58MXx8fHwxNzYwMDYzODc5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
-  },
-  {
-    id: 2,
-    title: 'TypeScript Basics',
-    description: 'Master TypeScript fundamentals and type system',
-    content: `# TypeScript Basics
+        category: 'Web Development',
+        status: 'published',
+        createdBy: '1',
+        createdAt: new Date('2024-01-10'),
+        summary:
+            'This lesson covers the fundamentals of React including components, JSX, props, state, and the Virtual DOM. Perfect for beginners starting their React journey.',
+        imageUrl:
+            'https://images.unsplash.com/photo-1569693799105-4eb645d89aea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9ncmFtbWluZyUyMGNvZGUlMjBsYXB0b3B8ZW58MXx8fHwxNzYwMDYzODc5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    },
+    {
+        id: 2,
+        title: 'TypeScript Basics',
+        description: 'Master TypeScript fundamentals and type system',
+        content: `# TypeScript Basics
 
 TypeScript is a typed superset of JavaScript that compiles to plain JavaScript. It adds optional static typing to the language, which can help catch errors early and improve code quality.
 
@@ -182,18 +184,20 @@ function greet(name: string): string {
   return \`Hello, \${name}!\`;
 }
 \`\`\``,
-    category: 'Programming',
-    status: 'published',
-    createdBy: '1',
-    createdAt: new Date('2024-01-15'),
-    summary: 'Learn TypeScript fundamentals including types, interfaces, and how to write type-safe code. Understand why TypeScript is essential for modern JavaScript development.',
-    imageUrl: 'https://images.unsplash.com/photo-1569693799105-4eb645d89aea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9ncmFtbWluZyUyMGNvZGUlMjBsYXB0b3B8ZW58MXx8fHwxNzYwMDYzODc5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
-  },
-  {
-    id: 3,
-    title: 'CSS Flexbox Layout',
-    description: 'Understanding modern CSS layouts with Flexbox',
-    content: `# CSS Flexbox Layout
+        category: 'Programming',
+        status: 'published',
+        createdBy: '1',
+        createdAt: new Date('2024-01-15'),
+        summary:
+            'Learn TypeScript fundamentals including types, interfaces, and how to write type-safe code. Understand why TypeScript is essential for modern JavaScript development.',
+        imageUrl:
+            'https://images.unsplash.com/photo-1569693799105-4eb645d89aea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9ncmFtbWluZyUyMGNvZGUlMjBsYXB0b3B8ZW58MXx8fHwxNzYwMDYzODc5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    },
+    {
+        id: 3,
+        title: 'CSS Flexbox Layout',
+        description: 'Understanding modern CSS layouts with Flexbox',
+        content: `# CSS Flexbox Layout
 
 Flexbox is a one-dimensional layout method for arranging items in rows or columns. It makes it easier to design flexible responsive layout structures.
 
@@ -245,18 +249,20 @@ Defines the ability for a flex item to shrink.
 
 ### flex-basis
 Defines the default size of an element.`,
-    category: 'Web Development',
-    status: 'published',
-    createdBy: '1',
-    createdAt: new Date('2024-01-20'),
-    summary: 'Master CSS Flexbox to create responsive and flexible layouts. Learn container and item properties, alignment, and practical use cases.',
-    imageUrl: 'https://images.unsplash.com/photo-1639396104908-a8f2037ad565?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHVkeSUyMGJvb2tzJTIwZGVza3xlbnwxfHx8fDE3NjAwNzM5NDB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
-  },
-  {
-    id: 4,
-    title: 'JavaScript Async/Await',
-    description: 'Modern asynchronous programming in JavaScript',
-    content: `# JavaScript Async/Await
+        category: 'Web Development',
+        status: 'published',
+        createdBy: '1',
+        createdAt: new Date('2024-01-20'),
+        summary:
+            'Master CSS Flexbox to create responsive and flexible layouts. Learn container and item properties, alignment, and practical use cases.',
+        imageUrl:
+            'https://images.unsplash.com/photo-1639396104908-a8f2037ad565?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdHVkeSUyMGJvb2tzJTIwZGVza3xlbnwxfHx8fDE3NjAwNzM5NDB8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    },
+    {
+        id: 4,
+        title: 'JavaScript Async/Await',
+        description: 'Modern asynchronous programming in JavaScript',
+        content: `# JavaScript Async/Await
 
 Async/await is modern syntax for handling asynchronous operations in JavaScript. It makes asynchronous code look and behave more like synchronous code.
 
@@ -302,18 +308,20 @@ const [users, posts] = await Promise.all([
   fetchPosts()
 ]);
 \`\`\``,
-    category: 'Programming',
-    status: 'published',
-    createdBy: '1',
-    createdAt: new Date('2024-02-01'),
-    summary: 'Learn how to write clean asynchronous JavaScript code using async/await. Understand Promises, error handling, and parallel execution patterns.',
-    imageUrl: 'https://images.unsplash.com/photo-1569693799105-4eb645d89aea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9ncmFtbWluZyUyMGNvZGUlMjBsYXB0b3B8ZW58MXx8fHwxNzYwMDYzODc5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
-  },
-  {
-    id: 5,
-    title: 'Git Version Control',
-    description: 'Essential Git commands and workflows',
-    content: `# Git Version Control
+        category: 'Programming',
+        status: 'published',
+        createdBy: '1',
+        createdAt: new Date('2024-02-01'),
+        summary:
+            'Learn how to write clean asynchronous JavaScript code using async/await. Understand Promises, error handling, and parallel execution patterns.',
+        imageUrl:
+            'https://images.unsplash.com/photo-1569693799105-4eb645d89aea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9ncmFtbWluZyUyMGNvZGUlMjBsYXB0b3B8ZW58MXx8fHwxNzYwMDYzODc5fDA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    },
+    {
+        id: 5,
+        title: 'Git Version Control',
+        description: 'Essential Git commands and workflows',
+        content: `# Git Version Control
 
 Git is a distributed version control system that helps you track changes in your code and collaborate with others.
 
@@ -379,18 +387,20 @@ git merge <branch-name>
 2. Pull before pushing
 3. Use branches for features
 4. Review changes before committing`,
-    category: 'Development Tools',
-    status: 'published',
-    createdBy: '1',
-    createdAt: new Date('2024-02-05'),
-    summary: 'Get started with Git version control. Learn essential commands, branching strategies, and best practices for managing your code.',
-    imageUrl: 'https://images.unsplash.com/photo-1608986596619-eb50cc56831f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvbmxpbmUlMjBsZWFybmluZyUyMGVkdWNhdGlvbnxlbnwxfHx8fDE3NjAwNjM4Nzl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
-  },
-  {
-    id: 6,
-    title: 'REST API Design',
-    description: 'Best practices for designing RESTful APIs',
-    content: `# REST API Design
+        category: 'Development Tools',
+        status: 'published',
+        createdBy: '1',
+        createdAt: new Date('2024-02-05'),
+        summary:
+            'Get started with Git version control. Learn essential commands, branching strategies, and best practices for managing your code.',
+        imageUrl:
+            'https://images.unsplash.com/photo-1608986596619-eb50cc56831f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvbmxpbmUlMjBsZWFybmluZyUyMGVkdWNhdGlvbnxlbnwxfHx8fDE3NjAwNjM4Nzl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    },
+    {
+        id: 6,
+        title: 'REST API Design',
+        description: 'Best practices for designing RESTful APIs',
+        content: `# REST API Design
 
 REST (Representational State Transfer) is an architectural style for designing networked applications. RESTful APIs use HTTP requests to perform CRUD operations.
 
@@ -446,36 +456,38 @@ DELETE /api/users/123
 3. Return appropriate status codes
 4. Version your API
 5. Use filtering, sorting, pagination`,
-    category: 'Backend Development',
-    status: 'draft',
-    createdBy: '1',
-    createdAt: new Date('2024-02-10'),
-    summary: 'Learn how to design clean and efficient RESTful APIs. Understand HTTP methods, status codes, and industry best practices.',
-    imageUrl: 'https://images.unsplash.com/photo-1608986596619-eb50cc56831f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvbmxpbmUlMjBsZWFybmluZyUyMGVkdWNhdGlvbnxlbnwxfHx8fDE3NjAwNjM4Nzl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral'
-  }
+        category: 'Backend Development',
+        status: 'draft',
+        createdBy: '1',
+        createdAt: new Date('2024-02-10'),
+        summary:
+            'Learn how to design clean and efficient RESTful APIs. Understand HTTP methods, status codes, and industry best practices.',
+        imageUrl:
+            'https://images.unsplash.com/photo-1608986596619-eb50cc56831f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxvbmxpbmUlMjBsZWFybmluZyUyMGVkdWNhdGlvbnxlbnwxfHx8fDE3NjAwNjM4Nzl8MA&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral',
+    },
 ];
 
 // Mock progress data
 export const mockProgress: Progress[] = [
-  {
-    userId: '2',
-    lessonId: 1,
-    completed: true,
-    lastAccessed: new Date('2024-02-15'),
-    progress: 100
-  },
-  {
-    userId: '2',
-    lessonId: 2,
-    completed: false,
-    lastAccessed: new Date('2024-02-20'),
-    progress: 60
-  },
-  {
-    userId: '2',
-    lessonId: 3,
-    completed: false,
-    lastAccessed: new Date('2024-02-18'),
-    progress: 30
-  }
+    {
+        userId: '2',
+        lessonId: 1,
+        completed: true,
+        lastAccessed: new Date('2024-02-15'),
+        progress: 100,
+    },
+    {
+        userId: '2',
+        lessonId: 2,
+        completed: false,
+        lastAccessed: new Date('2024-02-20'),
+        progress: 60,
+    },
+    {
+        userId: '2',
+        lessonId: 3,
+        completed: false,
+        lastAccessed: new Date('2024-02-18'),
+        progress: 30,
+    },
 ];

@@ -3,13 +3,13 @@
  * These routes will bypass the auth middleware
  */
 export const publicRoutes = [
-  // User registration
-  '/rpc/register_user',
+    // User registration
+    '/rpc/register_user',
 
-  // User login
-  '/rpc/verify_login',
+    // User login
+    '/rpc/verify_login',
 
-  // Health check already handled separately
+    // Health check already handled separately
 ];
 
 /**
@@ -17,18 +17,18 @@ export const publicRoutes = [
  * Listed here for documentation purposes
  */
 export const adminRoutes = [
-  // Lesson management
-  '/rpc/create_lesson',
-  '/rpc/update_lesson',
-  '/rpc/delete_lesson',
+    // Lesson management
+    '/rpc/create_lesson',
+    '/rpc/update_lesson',
+    '/rpc/delete_lesson',
 
-  // Direct table access
-  'POST /lessons',
-  'PATCH /lessons/*',
-  'DELETE /lessons/*',
+    // Direct table access
+    'POST /lessons',
+    'PATCH /lessons/*',
+    'DELETE /lessons/*',
 
-  // User management
-  'POST /users',
-  'PATCH /users/*',
-  'DELETE /users/*',
+    // User management
+    'POST /users',
+    'PATCH /users/*',
+    'DELETE /users/*',
 ];
