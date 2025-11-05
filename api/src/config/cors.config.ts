@@ -2,7 +2,7 @@ import type { CorsOptions } from "cors";
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "http://127.0.0.1:3000",
+  "http://localhost:5174",
   "https://zlearning.vercel.app",
   "https://ui.sgk.guidestaredu.com",
   "https://api.learning-platform-app.guidestaredu.com",
@@ -24,6 +24,7 @@ export const corsOptions: CorsOptions = {
     "Authorization",
     "X-Requested-With",
     "Accept",
+    "Prefer",
   ],
   optionsSuccessStatus: 204,
   maxAge: 600,
