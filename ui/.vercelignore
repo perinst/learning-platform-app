@@ -3,6 +3,7 @@ node_modules
 .git
 *.log
 dist
+build
 coverage
 Dockerfile
 docker-compose.yml
