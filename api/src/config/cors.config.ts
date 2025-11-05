@@ -5,6 +5,7 @@ const allowedOrigins = [
   "http://127.0.0.1:3000",
   "https://zlearning.vercel.app",
   "https://ui.sgk.guidestaredu.com",
+  "https://api.learning-platform-app.guidestaredu.com",
 ];
 
 export const corsOptions: CorsOptions = {
