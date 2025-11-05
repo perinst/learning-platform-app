@@ -67,19 +67,6 @@ services:
     volumes:
       - ./src:/app/src:ro  # Mount source for development (optional)
 
-  adminer:
-    image: adminer:latest
-    container_name: learning-platform-adminer
-    restart: unless-stopped
-    ports:
-      - "8080:8080"
-    depends_on:
-      - postgres
-    environment:
-      ADMINER_DEFAULT_SERVER: postgres
-    networks:
-      - internal
-
 volumes:
   postgres_data:
 
