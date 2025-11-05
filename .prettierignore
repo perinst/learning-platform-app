@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+**/dist/
+**/build/
+**/coverage/
+**/.vite/
+**/.next/
+**/out/
+
+# Logs
+**/logs/
+*.log
+
+# Generated assets
+**/*.min.js
+**/*.min.css
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Project-specific
+ui/build/
+api/resources/db/init/**/*.sql
