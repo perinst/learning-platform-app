@@ -1,19 +1,34 @@
-import { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Clock, User, BookOpen, CheckCircle, MessageSquare, Sparkles, Lightbulb, HelpCircle, Check, X, ChevronLeft, ChevronRight } from 'lucide-react';
-import { Button } from '../ui/button';
-import { Card, CardContent } from '../ui/card';
-import { Badge } from '../ui/badge';
-import { Progress as ProgressBar } from '../ui/progress';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../ui/tabs';
-import { AIAssistant } from '../ai/AIAssistant';
-import { ImageWithFallback } from '../figma/ImageWithFallback';
-import { useCurrentUser } from '../../hooks/useAuth';
-import { useLesson } from '../../hooks/useLessons';
-import { useLessonProgress, useUpdateProgress } from '../../hooks/useProgress';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import {
+  ArrowLeft,
+  Clock,
+  User,
+  BookOpen,
+  CheckCircle,
+  MessageSquare,
+  Sparkles,
+  Lightbulb,
+  HelpCircle,
+  Check,
+  X,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
+import { Button } from "../ui/button";
+import { Card, CardContent } from "../ui/card";
+import { Badge } from "../ui/badge";
+import { Progress as ProgressBar } from "../ui/progress";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "../ui/tabs";
+import { AIAssistant } from "../ai/AIAssistant";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { useCurrentUser } from "../../hooks/useAuth";
+import { useLesson } from "../../hooks/useLessons";
+import { useLessonProgress, useUpdateProgress } from "../../hooks/useProgress";
+import { toast } from "sonner";
 
-import { MarkdownRenderer } from '../MarkdownRenderer';
+import { MarkdownRenderer } from "../MarkdownRenderer";
+import type { LessonApplication } from "../../types/api.types";
 
 export function LessonDetail() {
   const { id } = useParams<{ id: string }>();
@@ -21,15 +36,14 @@ export function LessonDetail() {
   const { data: currentUser } = useCurrentUser();
   const { data: lesson, isLoading: isLoadingLesson } = useLesson(id!);
   const { data: progress, isLoading: isLoadingProgress } = useLessonProgress(
-    currentUser?.id || '',
-    id || ''
+    currentUser?.id || "",
+    id || ""
   );
-  const [activeTab, setActiveTab] = useState('content');
+  const [activeTab, setActiveTab] = useState("content");
   const updateProgressMutation = useUpdateProgress();
   const [userAnswers, setUserAnswers] = useState<Record<number, number>>({});
   const [showResults, setShowResults] = useState(false);
   const [currentAppPage, setCurrentAppPage] = useState(0);
-  const appsPerPage = 1;
 
   if (!currentUser || !id || isLoadingLesson || isLoadingProgress) {
     return (
@@ -52,15 +66,20 @@ export function LessonDetail() {
   }
 
   const handleBack = () => {
-    navigate('/lessons');
+    navigate("/lessons");
   };
 
   const handleComplete = () => {
     updateProgressMutation.mutate(
-      { userId: currentUser.id, lessonId: lesson.id, progress: 100, completed: true },
       {
-        onSuccess: () => toast.success('Lesson completed! 🎉'),
-        onError: () => toast.error('Failed to update progress'),
+        userId: currentUser.id,
+        lessonId: lesson.id.toString(),
+        progress: 100,
+        completed: true,
+      },
+      {
+        onSuccess: () => toast.success("Lesson completed! 🎉"),
+        onError: () => toast.error("Failed to update progress"),
       }
     );
   };
@@ -68,29 +87,35 @@ export function LessonDetail() {
   const handleUpdateProgress = () => {
     const newProgress = Math.min((progress?.progress || 0) + 25, 100);
     updateProgressMutation.mutate(
-      { userId: currentUser.id, lessonId: lesson.id, progress: newProgress, completed: newProgress === 100 },
       {
-        onSuccess: () => toast.success('Progress updated!'),
-        onError: () => toast.error('Failed to update progress'),
+        userId: currentUser.id,
+        lessonId: lesson.id.toString(),
+        progress: newProgress,
+        completed: newProgress === 100,
+      },
+      {
+        onSuccess: () => toast.success("Progress updated!"),
+        onError: () => toast.error("Failed to update progress"),
       }
     );
   };
 
   const handleSelectAnswer = (questionIndex: number, choiceIndex: number) => {
     if (showResults) return; // Prevent changing after checking
-    setUserAnswers(prev => ({
+    setUserAnswers((prev) => ({
       ...prev,
-      [questionIndex]: choiceIndex
+      [questionIndex]: choiceIndex,
     }));
   };
 
   const handleCheckAnswers = () => {
     setShowResults(true);
-    const correctCount = lesson.questions?.filter((q, idx) => {
-      const userChoice = userAnswers[idx];
-      if (userChoice === undefined) return false;
-      return q.choices[userChoice]?.isCorrect;
-    }).length || 0;
+    const correctCount =
+      lesson.questions?.filter((q, idx) => {
+        const userChoice = userAnswers[idx];
+        if (userChoice === undefined) return false;
+        return q.choices[userChoice]?.isCorrect;
+      }).length || 0;
 
     const total = lesson.questions?.length || 0;
     toast.success(`You got ${correctCount} out of ${total} correct!`);
@@ -114,7 +139,7 @@ export function LessonDetail() {
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
                 <Badge variant="secondary">{lesson.category}</Badge>
-                {lesson.status === 'draft' && (
+                {lesson.status === "draft" && (
                   <Badge variant="outline">Draft</Badge>
                 )}
               </div>
@@ -212,7 +237,11 @@ export function LessonDetail() {
 
                 {!progress?.completed && (
                   <div className="flex justify-center">
-                    <Button onClick={handleUpdateProgress} variant="outline" size="lg">
+                    <Button
+                      onClick={handleUpdateProgress}
+                      variant="outline"
+                      size="lg"
+                    >
                       Continue Learning (+25%)
                     </Button>
                   </div>
@@ -262,15 +291,21 @@ export function LessonDetail() {
           <TabsContent value="applications">
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-8">
-                <h2 className="text-2xl font-bold mb-2">Real-World Applications</h2>
-                <p className="text-gray-600">See how this knowledge is applied in practice</p>
+                <h2 className="text-2xl font-bold mb-2">
+                  Real-World Applications
+                </h2>
+                <p className="text-gray-600">
+                  See how this knowledge is applied in practice
+                </p>
               </div>
 
               {lesson.applications && lesson.applications.length > 0 && (
                 <>
                   {(() => {
                     const totalApps = lesson.applications.length;
-                    const currentApp = lesson.applications[currentAppPage];
+                    const currentApp: LessonApplication = lesson.applications[
+                      currentAppPage
+                    ] as unknown as LessonApplication;
 
                     return (
                       <>
@@ -284,38 +319,51 @@ export function LessonDetail() {
                               </div>
                               <div className="flex-1">
                                 <div className="flex items-center justify-between mb-4">
-                                  <h3 className="text-2xl font-bold text-gray-900">{currentApp.title}</h3>
+                                  <h3 className="text-2xl font-bold text-gray-900">
+                                    {currentApp.title}
+                                  </h3>
                                   <Badge variant="secondary">
-                                    Application {currentAppPage + 1} of {totalApps}
+                                    Application {currentAppPage + 1} of{" "}
+                                    {totalApps}
                                   </Badge>
                                 </div>
 
                                 <div className="prose prose-slate max-w-none mb-6">
-                                  <MarkdownRenderer content={currentApp.description} />
+                                  <MarkdownRenderer
+                                    content={currentApp.description}
+                                  />
                                 </div>
 
-                                {currentApp.examples && currentApp.examples.length > 0 && (
-                                  <div className="mt-6 border-t pt-6">
-                                    <h4 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                                      <Sparkles className="h-5 w-5 text-blue-600" />
-                                      Practical Examples
-                                    </h4>
-                                    <div className="space-y-6">
-                                      {currentApp.examples.map((example, idx) => (
-                                        <div key={idx} className="bg-gray-50 rounded-lg p-6 border border-gray-200">
-                                          <div className="flex items-start gap-3">
-                                            <div className="shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold">
-                                              {idx + 1}
+                                {currentApp.examples &&
+                                  currentApp.examples.length > 0 && (
+                                    <div className="mt-6 border-t pt-6">
+                                      <h4 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                                        <Sparkles className="h-5 w-5 text-blue-600" />
+                                        Practical Examples
+                                      </h4>
+                                      <div className="space-y-6">
+                                        {currentApp.examples.map(
+                                          (example: string, idx: number) => (
+                                            <div
+                                              key={idx}
+                                              className="bg-gray-50 rounded-lg p-6 border border-gray-200"
+                                            >
+                                              <div className="flex items-start gap-3">
+                                                <div className="shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-semibold">
+                                                  {idx + 1}
+                                                </div>
+                                                <div className="flex-1 prose prose-slate max-w-none">
+                                                  <MarkdownRenderer
+                                                    content={example}
+                                                  />
+                                                </div>
+                                              </div>
                                             </div>
-                                            <div className="flex-1 prose prose-slate max-w-none">
-                                              <MarkdownRenderer content={example} />
-                                            </div>
-                                          </div>
-                                        </div>
-                                      ))}
+                                          )
+                                        )}
+                                      </div>
                                     </div>
-                                  </div>
-                                )}
+                                  )}
                               </div>
                             </div>
                           </CardContent>
@@ -324,7 +372,9 @@ export function LessonDetail() {
                         <div className="flex items-center justify-between">
                           <Button
                             variant="outline"
-                            onClick={() => setCurrentAppPage(prev => Math.max(0, prev - 1))}
+                            onClick={() =>
+                              setCurrentAppPage((prev) => Math.max(0, prev - 1))
+                            }
                             disabled={currentAppPage === 0}
                             className="gap-2"
                           >
@@ -339,8 +389,8 @@ export function LessonDetail() {
                                 onClick={() => setCurrentAppPage(i)}
                                 className={`w-2.5 h-2.5 rounded-full transition-all ${
                                   i === currentAppPage
-                                    ? 'bg-blue-600 w-8'
-                                    : 'bg-gray-300 hover:bg-gray-400'
+                                    ? "bg-blue-600 w-8"
+                                    : "bg-gray-300 hover:bg-gray-400"
                                 }`}
                                 aria-label={`Go to application ${i + 1}`}
                               />
@@ -349,7 +399,11 @@ export function LessonDetail() {
 
                           <Button
                             variant="outline"
-                            onClick={() => setCurrentAppPage(prev => Math.min(totalApps - 1, prev + 1))}
+                            onClick={() =>
+                              setCurrentAppPage((prev) =>
+                                Math.min(totalApps - 1, prev + 1)
+                              )
+                            }
                             disabled={currentAppPage === totalApps - 1}
                             className="gap-2"
                           >
@@ -371,8 +425,8 @@ export function LessonDetail() {
                 <h2 className="text-2xl font-bold mb-2">Test Your Knowledge</h2>
                 <p className="text-gray-600">
                   {showResults
-                    ? 'Review your answers below'
-                    : 'Select the correct answer for each question'}
+                    ? "Review your answers below"
+                    : "Select the correct answer for each question"}
                 </p>
               </div>
 
@@ -384,8 +438,12 @@ export function LessonDetail() {
                     <CardContent className="p-6">
                       <div className="mb-4">
                         <div className="flex gap-2 mb-3">
-                          <span className="font-semibold text-blue-600">Q{qIndex + 1}.</span>
-                          <h3 className="font-semibold flex-1">{question.questionText}</h3>
+                          <span className="font-semibold text-blue-600">
+                            Q{qIndex + 1}.
+                          </span>
+                          <h3 className="font-semibold flex-1">
+                            {question.questionText}
+                          </h3>
                         </div>
                       </div>
 
@@ -394,7 +452,8 @@ export function LessonDetail() {
                           const isSelected = userChoice === cIndex;
                           const isCorrect = choice.isCorrect;
                           const showCorrect = showResults && isCorrect;
-                          const showWrong = showResults && isSelected && !isCorrect;
+                          const showWrong =
+                            showResults && isSelected && !isCorrect;
 
                           return (
                             <button
@@ -403,13 +462,17 @@ export function LessonDetail() {
                               disabled={showResults}
                               className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
                                 showCorrect
-                                  ? 'border-green-500 bg-green-50'
+                                  ? "border-green-500 bg-green-50"
                                   : showWrong
-                                  ? 'border-red-500 bg-red-50'
+                                  ? "border-red-500 bg-red-50"
                                   : isSelected
-                                  ? 'border-blue-500 bg-blue-50'
-                                  : 'border-gray-200 hover:border-gray-400 bg-white'
-                              } ${showResults ? 'cursor-default' : 'cursor-pointer'}`}
+                                  ? "border-blue-500 bg-blue-50"
+                                  : "border-gray-200 hover:border-gray-400 bg-white"
+                              } ${
+                                showResults
+                                  ? "cursor-default"
+                                  : "cursor-pointer"
+                              }`}
                             >
                               <div className="flex items-center gap-3">
                                 <div className="shrink-0">
@@ -427,15 +490,17 @@ export function LessonDetail() {
                                     <div className="w-6 h-6 rounded-full border-2 border-gray-300" />
                                   )}
                                 </div>
-                                <span className={
-                                  showCorrect
-                                    ? 'text-green-900 font-medium'
-                                    : showWrong
-                                    ? 'text-red-900 font-medium'
-                                    : isSelected
-                                    ? 'text-blue-900 font-medium'
-                                    : 'text-gray-700'
-                                }>
+                                <span
+                                  className={
+                                    showCorrect
+                                      ? "text-green-900 font-medium"
+                                      : showWrong
+                                      ? "text-red-900 font-medium"
+                                      : isSelected
+                                      ? "text-blue-900 font-medium"
+                                      : "text-gray-700"
+                                  }
+                                >
                                   {choice.choiceText}
                                 </span>
                               </div>
@@ -453,13 +518,20 @@ export function LessonDetail() {
                   {!showResults ? (
                     <Button
                       onClick={handleCheckAnswers}
-                      disabled={Object.keys(userAnswers).length !== lesson.questions.length}
+                      disabled={
+                        Object.keys(userAnswers).length !==
+                        lesson.questions.length
+                      }
                       size="lg"
                     >
                       Check Answers
                     </Button>
                   ) : (
-                    <Button onClick={handleResetQuiz} variant="outline" size="lg">
+                    <Button
+                      onClick={handleResetQuiz}
+                      variant="outline"
+                      size="lg"
+                    >
                       Try Again
                     </Button>
                   )}

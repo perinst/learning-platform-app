@@ -1,22 +1,35 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Search, Filter, BookOpen, Clock, CheckCircle, Plus } from 'lucide-react';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Search,
+  Filter,
+  BookOpen,
+  Clock,
+  CheckCircle,
+  Plus,
+} from "lucide-react";
+import { Input } from "../ui/input";
+import { Button } from "../ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
+import { Badge } from "../ui/badge";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '../ui/select';
-import type { Lesson } from '../../utils/mockData';
-import { ImageWithFallback } from '../figma/ImageWithFallback';
-import { useCurrentUser } from '../../hooks/useAuth';
-import { useLessons } from '../../hooks/useLessons';
-import { useProgress } from '../../hooks/useProgress';
+} from "../ui/select";
+import type { Lesson } from "../../utils/mockData";
+import { ImageWithFallback } from "../figma/ImageWithFallback";
+import { useCurrentUser } from "../../hooks/useAuth";
+import { useLessons } from "../../hooks/useLessons";
+import { useProgress } from "../../hooks/useProgress";
 
 export function LessonList() {
   const navigate = useNavigate();
@@ -24,9 +37,9 @@ export function LessonList() {
   const { data: lessons = [], isLoading: isLoadingLessons } = useLessons();
   const { data: progress = [], isLoading: isLoadingProgress } = useProgress();
 
-  const [searchQuery, setSearchQuery] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
 
   if (!currentUser || isLoadingLessons || isLoadingProgress) {
     return (
@@ -37,12 +50,14 @@ export function LessonList() {
   }
 
   // Get unique categories, filter out empty strings
-  const categories = Array.from(new Set(lessons.map(l => l.category))).filter(cat => cat && cat.trim());
+  const categories = Array.from(new Set(lessons.map((l) => l.category))).filter(
+    (cat) => cat && cat.trim()
+  );
 
   // Filter lessons
-  const filteredLessons = lessons.filter(lesson => {
+  const filteredLessons = lessons.filter((lesson) => {
     // Hide drafts from regular users
-    if (currentUser.role !== 'admin' && lesson.status === 'draft') {
+    if (currentUser.role !== "admin" && lesson.status === "draft") {
       return false;
     }
 
@@ -50,14 +65,20 @@ export function LessonList() {
       lesson.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       lesson.description.toLowerCase().includes(searchQuery.toLowerCase());
 
-    const matchesCategory = categoryFilter === 'all' || lesson.category === categoryFilter;
-    const matchesStatus = statusFilter === 'all' || lesson.status === statusFilter;
+    const matchesCategory =
+      categoryFilter === "all" || lesson.category === categoryFilter;
+    const matchesStatus =
+      statusFilter === "all" || lesson.status === statusFilter;
 
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
-  const getLessonProgress = (lessonId: string) => {
-    return progress.find(p => p.lessonId === lessonId && p.userId === currentUser.id);
+  const getLessonProgress = (lessonId: string | number) => {
+    return progress.find(
+      (p) =>
+        p.lessonId.toString() === lessonId.toString() &&
+        p.userId === currentUser.id
+    );
   };
 
   const handleSelectLesson = (lesson: Lesson) => {
@@ -65,7 +86,7 @@ export function LessonList() {
   };
 
   const handleCreateLesson = () => {
-    navigate('/lessons/create');
+    navigate("/lessons/create");
   };
 
   return (
@@ -74,11 +95,12 @@ export function LessonList() {
         <div>
           <h1 className="mb-2">All Lessons</h1>
           <p className="text-gray-600">
-            {filteredLessons.length} {filteredLessons.length === 1 ? 'lesson' : 'lessons'} available
+            {filteredLessons.length}{" "}
+            {filteredLessons.length === 1 ? "lesson" : "lessons"} available
           </p>
         </div>
 
-        {currentUser.role === 'admin' && (
+        {currentUser.role === "admin" && (
           <Button onClick={handleCreateLesson} className="gap-2">
             <Plus className="h-4 w-4" />
             Create Lesson
@@ -104,7 +126,7 @@ export function LessonList() {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Categories</SelectItem>
-            {categories.map(category => (
+            {categories.map((category) => (
               <SelectItem key={category} value={category}>
                 {category}
               </SelectItem>
@@ -112,7 +134,7 @@ export function LessonList() {
           </SelectContent>
         </Select>
 
-        {currentUser.role === 'admin' && (
+        {currentUser.role === "admin" && (
           <Select value={statusFilter} onValueChange={setStatusFilter}>
             <SelectTrigger className="w-full md:w-48">
               <SelectValue placeholder="Status" />
@@ -127,7 +149,7 @@ export function LessonList() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredLessons.map(lesson => {
+        {filteredLessons.map((lesson) => {
           const lessonProgress = getLessonProgress(lesson.id);
 
           return (
@@ -156,7 +178,7 @@ export function LessonList() {
                   <Badge variant="secondary" className="shrink-0">
                     {lesson.category}
                   </Badge>
-                  {lesson.status === 'draft' && (
+                  {lesson.status === "draft" && (
                     <Badge variant="outline">Draft</Badge>
                   )}
                 </div>
@@ -174,7 +196,9 @@ export function LessonList() {
                   </div>
                   <div className="flex items-center gap-1">
                     <Clock className="h-4 w-4" />
-                    <span>{new Date(lesson.createdAt).toLocaleDateString()}</span>
+                    <span>
+                      {new Date(lesson.createdAt).toLocaleDateString()}
+                    </span>
                   </div>
                 </div>
 
@@ -182,7 +206,9 @@ export function LessonList() {
                   <div className="mt-4">
                     <div className="flex items-center justify-between text-sm mb-1">
                       <span className="text-gray-600">Progress</span>
-                      <span className="text-blue-600">{lessonProgress.progress}%</span>
+                      <span className="text-blue-600">
+                        {lessonProgress.progress}%
+                      </span>
                     </div>
                     <div className="h-2 bg-gray-200 rounded-full overflow-hidden">
                       <div
@@ -202,9 +228,7 @@ export function LessonList() {
         <div className="text-center py-12">
           <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
           <h3 className="text-gray-600 mb-2">No lessons found</h3>
-          <p className="text-gray-500">
-            Try adjusting your search or filters
-          </p>
+          <p className="text-gray-500">Try adjusting your search or filters</p>
         </div>
       )}
     </div>
