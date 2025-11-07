@@ -31,7 +31,7 @@ services:
         expose:
             - "3000" # Exposed to internal network only, NOT to host
         environment:
-            PGRST_DB_URI: postgres://postgres:postgres@postgres:5432/learning_platform
+            PGRST_DB_URI: postgres://postgres:api_user@postgres:5432/learning_platform
             PGRST_DB_ANON_ROLE: postgres
             PGRST_DB_SCHEMA: public
             PGRST_OPENAPI_SERVER_PROXY_URI: http://localhost:3000
@@ -52,7 +52,7 @@ services:
             DB_HOST: postgres
             DB_PORT: 5432
             DB_NAME: learning_platform
-            DB_USER: postgres
+            DB_USER: api_user
             DB_PASSWORD: postgres
             POSTGREST_URL: http://learning-platform-postgrest:3000
             PORT: 4000
