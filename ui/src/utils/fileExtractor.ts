@@ -2,7 +2,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 import * as mammoth from 'mammoth';
 import type { TextItem } from 'pdfjs-dist/types/src/display/api';
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
+pdfjsLib.GlobalWorkerOptions.workerSrc = '/assets/pdf.worker.min.mjs';
 
 export async function extractTextFromPDF(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
