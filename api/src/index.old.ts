@@ -59,11 +59,11 @@ app.use(errorMiddleware);
 // Start server
 const server = app.listen(config.port, async () => {
     console.log('\n' + '='.repeat(60));
-    console.log('Learning Platform API Server');
+    console.log('🚀 Learning Platform API Server');
     console.log('='.repeat(60));
-    console.log(`Server URL: http://localhost:${config.port}`);
-    console.log(`Environment: ${config.nodeEnv}`);
-    console.log(`PostgREST: ${config.postgrestUrl}`);
+    console.log(`📍 Server URL: http://localhost:${config.port}`);
+    console.log(`🌍 Environment: ${config.nodeEnv}`);
+    console.log(`📡 PostgREST: ${config.postgrestUrl}`);
     console.log('='.repeat(60) + '\n');
 
     // Test database connection
@@ -75,46 +75,46 @@ const server = app.listen(config.port, async () => {
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {
-    console.log('\nSIGTERM received. Shutting down gracefully...');
+    console.log('\n🛑 SIGTERM received. Shutting down gracefully...');
 
     server.close(async () => {
-        console.log('Server closed. Cleaning up...');
+        console.log('🔒 Server closed. Cleaning up...');
 
         try {
             await dbManager.close();
-            console.log('Cleanup complete. Exiting.');
+            console.log('✅ Cleanup complete. Exiting.');
             process.exit(0);
         } catch (error) {
-            console.error('Error during cleanup:', error);
+            console.error('❌ Error during cleanup:', error);
             process.exit(1);
         }
     });
 
     // Force shutdown after 10 seconds
     setTimeout(() => {
-        console.error('Forced shutdown after timeout');
+        console.error('⏱️  Forced shutdown after timeout');
         process.exit(1);
     }, 10000);
 });
 
 process.on('SIGINT', async () => {
-    console.log('\nSIGINT received. Shutting down gracefully...');
+    console.log('\n🛑 SIGINT received. Shutting down gracefully...');
     server.close(async () => {
         await dbManager.close();
-        console.log(' Server shut down complete.');
+        console.log('✅ Server shut down complete.');
         process.exit(0);
     });
 });
 
 // Handle uncaught exceptions
 process.on('uncaughtException', (error) => {
-    console.error('Uncaught Exception:', error);
+    console.error('❌ Uncaught Exception:', error);
     process.exit(1);
 });
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (reason, promise) => {
-    console.error('Unhandled Rejection at:', promise, 'reason:', reason);
+    console.error('❌ Unhandled Rejection at:', promise, 'reason:', reason);
     process.exit(1);
 });
 
