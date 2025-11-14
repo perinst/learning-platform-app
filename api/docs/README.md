@@ -2,33 +2,41 @@
 
 All documentation has been organized into this folder.
 
+## 🌟 NEW: Restructured API Architecture
+
+The API has been completely restructured with a modern, scalable architecture!
+
+### Start Here ⭐
+
+-   **[IMPLEMENTATION-CHECKLIST.md](./development/IMPLEMENTATION-CHECKLIST.md)** - Complete checklist
+-   **[VISUAL-GUIDE.md](./development/VISUAL-GUIDE.md)** - Visual diagrams and flow charts
+-   **[API-DEVELOPMENT-GUIDE.md](./development/API-DEVELOPMENT-GUIDE.md)** - Complete developer guide
+-   **[ARCHITECTURE.md](./development/ARCHITECTURE.md)** - System architecture deep dive
+
 ## Quick Links
 
 ### Getting Started
 
-- [README.md](../README.md) - Main project overview and setup
-- [QUICKSTART.md](./QUICKSTART.md) - Quick start guide for Windows
-- [SETUP-COMPLETE.md](./SETUP-COMPLETE.md) - Setup completion checklist
+-   [README.md](../README.md) - Main project overview and setup
+-   [QUICKSTART.md](./QUICKSTART.md) - Quick start guide for Windows
+-   [SETUP-COMPLETE.md](./SETUP-COMPLETE.md) - Setup completion checklist
 
 ### Architecture & Design
 
-- [ARCHITECTURE-COMPARISON.md](./ARCHITECTURE-COMPARISON.md) - Visual comparison of Dev vs Prod modes
-- [IMPLEMENTATION-SUMMARY.md](./IMPLEMENTATION-SUMMARY.md) - Complete implementation overview
-- [DEV-PROD-GUIDE.md](./DEV-PROD-GUIDE.md) - Development and production workflow guide
-- [REORGANIZATION-SUMMARY.md](./REORGANIZATION-SUMMARY.md) - Project structure reorganization details
-- [SCRIPTS-REORGANIZATION.md](./SCRIPTS-REORGANIZATION.md) - Scripts folder organization update
+-   **[ARCHITECTURE.md](./development/ARCHITECTURE.md)** - NEW: Layered architecture documentation
+
+### Development & API
+
+-   **[API-DEVELOPMENT-GUIDE.md](./development/API-DEVELOPMENT-GUIDE.md)** - NEW: How to develop APIs
+-   **[POSTGREST-GUIDE.md](./POSTGREST-GUIDE.md)** - Complete PostgREST API documentation
 
 ### Security & Authentication
 
-- [AUTH-PROXY-GUIDE.md](./AUTH-PROXY-GUIDE.md) - Complete authentication proxy documentation
-- [RBAC-GUIDE.md](./RBAC-GUIDE.md) - Role-based access control guide
-- [BLOCKING-POSTGREST.md](./BLOCKING-POSTGREST.md) - PostgREST security isolation guide
-- [WHY-NOT-BLOCKED.md](./WHY-NOT-BLOCKED.md) - Explanation of PostgREST exposure
-- [DOCKER-SECURITY.md](./DOCKER-SECURITY.md) - Docker security best practices and vulnerability fixes
-
-### API Reference
-
-- [POSTGREST-GUIDE.md](./POSTGREST-GUIDE.md) - Complete PostgREST API documentation
+-   [AUTH-PROXY-GUIDE.md](./AUTH-PROXY-GUIDE.md) - Complete authentication proxy documentation
+-   [RBAC-GUIDE.md](./RBAC-GUIDE.md) - Role-based access control guide
+-   [BLOCKING-POSTGREST.md](./BLOCKING-POSTGREST.md) - PostgREST security isolation guide
+-   [WHY-NOT-BLOCKED.md](./WHY-NOT-BLOCKED.md) - Explanation of PostgREST exposure
+-   [DOCKER-SECURITY.md](./DOCKER-SECURITY.md) - Docker security best practices and vulnerability fixes
 
 ---
 
