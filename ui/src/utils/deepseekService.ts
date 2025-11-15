@@ -23,6 +23,7 @@ interface LessonAnalysisResult {
         }>;
     }>;
 }
+import { MAX_TOKENS } from '../constants';
 import { LESSON_ANALYSIS_PROMPT } from '../constants/prompts';
 
 export async function analyzeLessonContent(text: string): Promise<LessonAnalysisResult> {
@@ -45,7 +46,10 @@ export async function analyzeLessonContent(text: string): Promise<LessonAnalysis
                 },
             ],
             temperature: 0.3,
-            max_tokens: 4000,
+            max_tokens: MAX_TOKENS,
+            response_format: {
+                type: 'json_object',
+            }
         }),
     });
 

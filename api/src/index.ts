@@ -258,6 +258,27 @@ app.post('/rpc/update_lesson_with_content', authMiddleware, async (req, res) => 
     }
 });
 
+app.post('/rpc/delete_lesson', authMiddleware, async (req, res) => {
+    try {
+        const response = await fetch(`${POSTGREST_URL}/rpc/delete_lesson`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(req.body),
+        });
+
+        const data = await response.json();
+        res.status(response.status).json(data);
+    } catch (error) {
+        console.error('[PROTECTED] Error calling PostgREST:', error);
+        res.status(502).json({
+            error: 'PostgREST connection error',
+            message: error instanceof Error ? error.message : 'Unknown error',
+        });
+    }
+});
+
 // Protected endpoints (require authentication and RBAC)
 app.use(
     '*',
