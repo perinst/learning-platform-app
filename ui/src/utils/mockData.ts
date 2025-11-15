@@ -41,6 +41,8 @@ export interface Lesson {
     imageUrl?: string;
     applications?: LessonApplication[];
     questions?: LessonQuestion[];
+    relevantStartDay?: number; // Day of year (1-366) when lesson becomes relevant
+    relevantEndDay?: number; // Day of year (1-366) when lesson relevance ends
 }
 
 export interface Progress {

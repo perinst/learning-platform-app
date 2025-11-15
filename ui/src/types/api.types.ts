@@ -44,6 +44,8 @@ export interface Lesson {
     created_by: string; // UUID (user_id)
     applications?: LessonApplication[];
     questions?: LessonQuestion[];
+    relevant_start_day?: number; // Day of year (1-366) when lesson becomes relevant
+    relevant_end_day?: number; // Day of year (1-366) when lesson relevance ends
 }
 
 export interface Progress {
@@ -97,6 +99,8 @@ export interface CreateLessonRequest {
     p_summary?: string;
     p_applications?: LessonApplication[];
     p_questions?: LessonQuestion[];
+    p_relevant_start_day?: number;
+    p_relevant_end_day?: number;
 }
 
 export interface UpdateLessonRequest {
