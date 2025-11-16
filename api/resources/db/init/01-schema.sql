@@ -35,7 +35,8 @@ CREATE TABLE lessons (
     summary TEXT,
     image_url TEXT,
     relevant_start_day INTEGER DEFAULT 1 CHECK (relevant_start_day >= 1 AND relevant_start_day <= 366),
-    relevant_end_day INTEGER DEFAULT 366 CHECK (relevant_end_day >= 1 AND relevant_end_day <= 366)
+    relevant_end_day INTEGER DEFAULT 366 CHECK (relevant_end_day >= 1 AND relevant_end_day <= 366),
+    grade VARCHAR(50)
 );
 
 -- Progress table

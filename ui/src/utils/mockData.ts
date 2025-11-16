@@ -43,6 +43,7 @@ export interface Lesson {
     questions?: LessonQuestion[];
     relevantStartDay?: number; // Day of year (1-366) when lesson becomes relevant
     relevantEndDay?: number; // Day of year (1-366) when lesson relevance ends
+    grade?: string; // Grade level (e.g., '10', '11', '12' or custom values)
 }
 
 export interface Progress {

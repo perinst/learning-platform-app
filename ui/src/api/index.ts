@@ -226,6 +226,7 @@ export const lessonsApi = {
                 p_questions: (data.questions || []).map(toBackendQuestion),
                 p_relevant_start_day: data.relevantStartDay || 1,
                 p_relevant_end_day: data.relevantEndDay || 366,
+                p_grade: data.grade,
             }),
         });
 
@@ -266,6 +267,7 @@ export const lessonsApi = {
                 p_questions: (updatedLesson.questions || []).map(toBackendQuestion),
                 p_relevant_start_day: updatedLesson.relevantStartDay || 1,
                 p_relevant_end_day: updatedLesson.relevantEndDay || 366,
+                p_grade: updatedLesson.grade,
             }),
         });
 

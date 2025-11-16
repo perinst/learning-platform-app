@@ -49,6 +49,9 @@ export function LessonEditor() {
     const [relevantStartDay, setRelevantStartDay] = useState<number>(lesson?.relevantStartDay || 1);
     const [relevantEndDay, setRelevantEndDay] = useState<number>(lesson?.relevantEndDay || 366);
 
+    // Grade state
+    const [grade, setGrade] = useState<string>(lesson?.grade || 'none');
+
     // Applications state
     const [applications, setApplications] = useState<LessonApplication[]>(lesson?.applications || []);
 
@@ -89,6 +92,7 @@ export function LessonEditor() {
         setImageUrl(lesson.imageUrl || '');
         setRelevantStartDay(lesson.relevantStartDay || 1);
         setRelevantEndDay(lesson.relevantEndDay || 366);
+        setGrade(lesson.grade || 'none');
         setApplications(lesson.applications || []);
         setQuestions(lesson.questions || []);
     }
@@ -240,6 +244,7 @@ export function LessonEditor() {
             imageUrl,
             relevantStartDay,
             relevantEndDay,
+            grade: grade === 'none' ? undefined : grade,
             applications,
             questions,
         };
@@ -401,6 +406,24 @@ export function LessonEditor() {
                                             </SelectContent>
                                         </Select>
                                     </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="grade">Grade Level</Label>
+                                    <Select value={grade} onValueChange={setGrade}>
+                                        <SelectTrigger id="grade">
+                                            <SelectValue placeholder="Select grade level (optional)" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="none">None</SelectItem>
+                                            <SelectItem value="10">Grade 10</SelectItem>
+                                            <SelectItem value="11">Grade 11</SelectItem>
+                                            <SelectItem value="12">Grade 12</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <p className="text-xs text-gray-500">
+                                        Optional: Specify the target grade level for this lesson
+                                    </p>
                                 </div>
 
                                 <div className="space-y-4">

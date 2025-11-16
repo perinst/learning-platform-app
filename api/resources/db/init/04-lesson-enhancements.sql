@@ -58,7 +58,8 @@ CREATE OR REPLACE FUNCTION create_lesson_with_content(
     p_applications JSONB DEFAULT '[]'::jsonb,
     p_questions JSONB DEFAULT '[]'::jsonb,
     p_relevant_start_day INTEGER DEFAULT 1,
-    p_relevant_end_day INTEGER DEFAULT 366
+    p_relevant_end_day INTEGER DEFAULT 366,
+    p_grade VARCHAR DEFAULT NULL
 )
 RETURNS JSONB AS $$
 DECLARE
@@ -83,8 +84,8 @@ BEGIN
     END IF;
 
     -- Create lesson
-    INSERT INTO lessons (title, description, content, category, status, created_by, summary, image_url, relevant_start_day, relevant_end_day)
-    VALUES (p_title, p_description, p_content, p_category, p_status, v_user_id, p_summary, p_image_url, p_relevant_start_day, p_relevant_end_day)
+    INSERT INTO lessons (title, description, content, category, status, created_by, summary, image_url, relevant_start_day, relevant_end_day, grade)
+    VALUES (p_title, p_description, p_content, p_category, p_status, v_user_id, p_summary, p_image_url, p_relevant_start_day, p_relevant_end_day, p_grade)
     RETURNING id INTO v_new_lesson_id;
 
     -- Insert applications if provided
@@ -152,7 +153,8 @@ CREATE OR REPLACE FUNCTION update_lesson_with_content(
     p_applications JSONB DEFAULT '[]'::jsonb,
     p_questions JSONB DEFAULT '[]'::jsonb,
     p_relevant_start_day INTEGER DEFAULT 1,
-    p_relevant_end_day INTEGER DEFAULT 366
+    p_relevant_end_day INTEGER DEFAULT 366,
+    p_grade VARCHAR DEFAULT NULL
 )
 RETURNS JSONB AS $$
 DECLARE
@@ -190,7 +192,8 @@ BEGIN
         summary = p_summary,
         image_url = p_image_url,
         relevant_start_day = p_relevant_start_day,
-        relevant_end_day = p_relevant_end_day
+        relevant_end_day = p_relevant_end_day,
+        grade = p_grade
     WHERE id = p_lesson_id;
 
     -- Delete existing applications and questions
@@ -265,6 +268,7 @@ RETURNS TABLE(
     image_url TEXT,
     relevant_start_day INTEGER,
     relevant_end_day INTEGER,
+    grade VARCHAR,
     applications JSONB,
     questions JSONB
 ) AS $$
@@ -283,6 +287,7 @@ BEGIN
         l.image_url,
         l.relevant_start_day,
         l.relevant_end_day,
+        l.grade,
         -- Get applications as JSONB array
         COALESCE(
             (SELECT jsonb_agg(
@@ -342,6 +347,7 @@ RETURNS TABLE(
     image_url TEXT,
     relevant_start_day INTEGER,
     relevant_end_day INTEGER,
+    grade VARCHAR,
     applications JSONB,
     questions JSONB
 ) AS $$
@@ -360,6 +366,7 @@ BEGIN
         l.image_url,
         l.relevant_start_day,
         l.relevant_end_day,
+        l.grade,
         COALESCE(
             (SELECT jsonb_agg(
                 jsonb_build_object(

@@ -68,6 +68,7 @@ export function toFrontendLesson(backendLesson: BackendLesson): Lesson {
         questions: backendLesson.questions?.map(toFrontendQuestion) || [],
         relevantStartDay: backendLesson.relevant_start_day,
         relevantEndDay: backendLesson.relevant_end_day,
+        grade: backendLesson.grade,
     };
 }
 
