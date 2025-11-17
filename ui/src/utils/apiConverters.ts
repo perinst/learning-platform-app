@@ -66,6 +66,9 @@ export function toFrontendLesson(backendLesson: BackendLesson): Lesson {
         createdBy: backendLesson.created_by,
         applications: backendLesson.applications?.map(toFrontendApplication) || [],
         questions: backendLesson.questions?.map(toFrontendQuestion) || [],
+        relevantStartDay: backendLesson.relevant_start_day,
+        relevantEndDay: backendLesson.relevant_end_day,
+        grade: backendLesson.grade,
     };
 }
 

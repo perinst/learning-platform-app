@@ -56,12 +56,12 @@ CREATE OR REPLACE FUNCTION create_lesson_with_content(
     p_summary TEXT DEFAULT NULL,
     p_image_url TEXT DEFAULT NULL,
     p_applications JSONB DEFAULT '[]'::jsonb,
-    p_questions JSONB DEFAULT '[]'::jsonb
+    p_questions JSONB DEFAULT '[]'::jsonb,
+    p_relevant_start_day INTEGER DEFAULT 1,
+    p_relevant_end_day INTEGER DEFAULT 366,
+    p_grade VARCHAR DEFAULT NULL
 )
-RETURNS TABLE(
-    new_lesson_id BIGINT,
-    message TEXT
-) AS $$
+RETURNS JSONB AS $$
 DECLARE
     v_user_id UUID;
     v_user_role VARCHAR;
@@ -84,8 +84,8 @@ BEGIN
     END IF;
 
     -- Create lesson
-    INSERT INTO lessons (title, description, content, category, status, created_by, summary, image_url)
-    VALUES (p_title, p_description, p_content, p_category, p_status, v_user_id, p_summary, p_image_url)
+    INSERT INTO lessons (title, description, content, category, status, created_by, summary, image_url, relevant_start_day, relevant_end_day, grade)
+    VALUES (p_title, p_description, p_content, p_category, p_status, v_user_id, p_summary, p_image_url, p_relevant_start_day, p_relevant_end_day, p_grade)
     RETURNING id INTO v_new_lesson_id;
 
     -- Insert applications if provided
@@ -131,7 +131,11 @@ BEGIN
         END LOOP;
     END IF;
 
-    RETURN QUERY SELECT v_new_lesson_id, 'Lesson created successfully with all content';
+    RETURN jsonb_build_object(
+        'lesson_id', v_new_lesson_id,
+        'message', 'Lesson created successfully with all content',
+        'success', true
+    );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -147,12 +151,12 @@ CREATE OR REPLACE FUNCTION update_lesson_with_content(
     p_summary TEXT DEFAULT NULL,
     p_image_url TEXT DEFAULT NULL,
     p_applications JSONB DEFAULT '[]'::jsonb,
-    p_questions JSONB DEFAULT '[]'::jsonb
+    p_questions JSONB DEFAULT '[]'::jsonb,
+    p_relevant_start_day INTEGER DEFAULT 1,
+    p_relevant_end_day INTEGER DEFAULT 366,
+    p_grade VARCHAR DEFAULT NULL
 )
-RETURNS TABLE(
-    updated_lesson_id BIGINT,
-    message TEXT
-) AS $$
+RETURNS JSONB AS $$
 DECLARE
     v_user_id UUID;
     v_user_role VARCHAR;
@@ -186,7 +190,10 @@ BEGIN
         category = p_category,
         status = p_status,
         summary = p_summary,
-        image_url = p_image_url
+        image_url = p_image_url,
+        relevant_start_day = p_relevant_start_day,
+        relevant_end_day = p_relevant_end_day,
+        grade = p_grade
     WHERE id = p_lesson_id;
 
     -- Delete existing applications and questions
@@ -236,7 +243,11 @@ BEGIN
         END LOOP;
     END IF;
 
-    RETURN QUERY SELECT p_lesson_id, 'Lesson updated successfully with all content';
+    RETURN jsonb_build_object(
+        'lesson_id', p_lesson_id,
+        'message', 'Lesson updated successfully with all content',
+        'success', true
+    );
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
@@ -255,6 +266,9 @@ RETURNS TABLE(
     created_at TIMESTAMP WITH TIME ZONE,
     summary TEXT,
     image_url TEXT,
+    relevant_start_day INTEGER,
+    relevant_end_day INTEGER,
+    grade VARCHAR,
     applications JSONB,
     questions JSONB
 ) AS $$
@@ -271,6 +285,9 @@ BEGIN
         l.created_at,
         l.summary,
         l.image_url,
+        l.relevant_start_day,
+        l.relevant_end_day,
+        l.grade,
         -- Get applications as JSONB array
         COALESCE(
             (SELECT jsonb_agg(
@@ -328,6 +345,9 @@ RETURNS TABLE(
     created_at TIMESTAMP WITH TIME ZONE,
     summary TEXT,
     image_url TEXT,
+    relevant_start_day INTEGER,
+    relevant_end_day INTEGER,
+    grade VARCHAR,
     applications JSONB,
     questions JSONB
 ) AS $$
@@ -344,6 +364,9 @@ BEGIN
         l.created_at,
         l.summary,
         l.image_url,
+        l.relevant_start_day,
+        l.relevant_end_day,
+        l.grade,
         COALESCE(
             (SELECT jsonb_agg(
                 jsonb_build_object(

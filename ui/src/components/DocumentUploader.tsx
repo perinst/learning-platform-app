@@ -2,6 +2,8 @@ import { useState, useRef } from 'react';
 import { Upload, FileText, Loader2, Sparkles } from 'lucide-react';
 import { Button } from './ui/button';
 import { Card, CardContent } from './ui/card';
+import { Textarea } from './ui/textarea';
+import { Label } from './ui/label';
 import { toast } from 'sonner';
 import { isValidDocumentFile } from '../utils/fileExtractor';
 import { analyzeDocument } from '../services/documentAnalyzer';
@@ -33,6 +35,7 @@ interface DocumentUploaderProps {
 export function DocumentUploader({ onAnalysisComplete }: DocumentUploaderProps) {
     const [isProcessing, setIsProcessing] = useState(false);
     const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+    const [customPrompt, setCustomPrompt] = useState('');
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -58,7 +61,7 @@ export function DocumentUploader({ onAnalysisComplete }: DocumentUploaderProps) 
 
         try {
             toast.loading('Analyzing document and generating lesson...', { id: toastId });
-            const analysisResult = await analyzeDocument(uploadedFile);
+            const analysisResult = await analyzeDocument(uploadedFile, customPrompt);
             toast.success('Document analyzed successfully!', { id: toastId });
             onAnalysisComplete(analysisResult);
             setUploadedFile(null);
@@ -106,9 +109,27 @@ export function DocumentUploader({ onAnalysisComplete }: DocumentUploaderProps) 
                         </div>
 
                         {uploadedFile ? (
-                            <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
-                                <FileText className="h-5 w-5 text-gray-600" />
-                                <span className="text-sm">{uploadedFile.name}</span>
+                            <div className="w-full space-y-4">
+                                <div className="flex items-center gap-2 p-3 bg-gray-50 rounded-lg">
+                                    <FileText className="h-5 w-5 text-gray-600" />
+                                    <span className="text-sm">{uploadedFile.name}</span>
+                                </div>
+                                <div className="space-y-2 text-left">
+                                    <Label htmlFor="custom-prompt" className="text-sm font-medium">
+                                        Custom Instructions (Optional)
+                                    </Label>
+                                    <Textarea
+                                        id="custom-prompt"
+                                        value={customPrompt}
+                                        onChange={(e) => setCustomPrompt(e.target.value)}
+                                        placeholder="e.g., 'Focus on beginner-level concepts', 'Include more code examples', 'Target high school students', 'Emphasize practical applications'..."
+                                        rows={3}
+                                        className="resize-none"
+                                    />
+                                    <p className="text-xs text-gray-500">
+                                        Provide additional context or specific requirements to customize the generated lesson
+                                    </p>
+                                </div>
                             </div>
                         ) : (
                             <div className="flex flex-col gap-2">
