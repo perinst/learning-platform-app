@@ -234,6 +234,11 @@ export function LessonEditor() {
             return;
         }
 
+        if (grade === 'none') {
+            toast.error('Please select a grade level');
+            return;
+        }
+
         const lessonData = {
             title,
             description,
