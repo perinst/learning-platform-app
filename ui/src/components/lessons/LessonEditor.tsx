@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Save, Sparkles, Loader2, Plus, Trash2, GripVertical } from 'lucide-react';
+import { ArrowLeft, Save, Sparkles, Loader2, Plus, Trash2, GripVertical, Calendar } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import { Label } from '../ui/label';
 import { Textarea } from '../ui/textarea';
+import { Slider } from '../ui/slider';
 import { MarkdownTextarea } from '../MarkdownTextarea';
 import { ImageUrlInput } from '../ImageUrlInput';
 import { DocumentUploader } from '../DocumentUploader';
@@ -16,6 +17,15 @@ import { useCreateLesson, useUpdateLesson, useLessons, useLesson } from '../../h
 import { useCurrentUser } from '../../hooks/useAuth';
 import { toast } from 'sonner';
 import type { LessonApplication, LessonQuestion, QuestionChoice } from '../../utils/mockData';
+
+// Helper function to convert day of year (1-366) to a readable date label
+function getDayOfYearLabel(dayOfYear: number): string {
+    const year = new Date().getFullYear();
+    const date = new Date(year, 0); // January 1st
+    date.setDate(dayOfYear);
+
+    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
 
 export function LessonEditor() {
     const { id } = useParams<{ id: string }>();
@@ -34,6 +44,13 @@ export function LessonEditor() {
     const [imageUrl, setImageUrl] = useState(lesson?.imageUrl || '');
     const [isGeneratingSummary, setIsGeneratingSummary] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    // Relevant time period state (day of year: 1-366)
+    const [relevantStartDay, setRelevantStartDay] = useState<number>(lesson?.relevantStartDay || 1);
+    const [relevantEndDay, setRelevantEndDay] = useState<number>(lesson?.relevantEndDay || 366);
+
+    // Grade state
+    const [grade, setGrade] = useState<string>(lesson?.grade || 'none');
 
     // Applications state
     const [applications, setApplications] = useState<LessonApplication[]>(lesson?.applications || []);
@@ -73,6 +90,9 @@ export function LessonEditor() {
         setStatus(lesson.status);
         setSummary(lesson.summary || '');
         setImageUrl(lesson.imageUrl || '');
+        setRelevantStartDay(lesson.relevantStartDay || 1);
+        setRelevantEndDay(lesson.relevantEndDay || 366);
+        setGrade(lesson.grade || 'none');
         setApplications(lesson.applications || []);
         setQuestions(lesson.questions || []);
     }
@@ -214,6 +234,11 @@ export function LessonEditor() {
             return;
         }
 
+        if (grade === 'none') {
+            toast.error('Please select a grade level');
+            return;
+        }
+
         const lessonData = {
             title,
             description,
@@ -222,6 +247,9 @@ export function LessonEditor() {
             status,
             summary,
             imageUrl,
+            relevantStartDay,
+            relevantEndDay,
+            grade: grade === 'none' ? undefined : grade,
             applications,
             questions,
         };
@@ -382,6 +410,89 @@ export function LessonEditor() {
                                                 <SelectItem value="published">Published</SelectItem>
                                             </SelectContent>
                                         </Select>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="grade">Grade Level</Label>
+                                    <Select value={grade} onValueChange={setGrade}>
+                                        <SelectTrigger id="grade">
+                                            <SelectValue placeholder="Select grade level (optional)" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="none">None</SelectItem>
+                                            <SelectItem value="10">Grade 10</SelectItem>
+                                            <SelectItem value="11">Grade 11</SelectItem>
+                                            <SelectItem value="12">Grade 12</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <p className="text-xs text-gray-500">
+                                        Optional: Specify the target grade level for this lesson
+                                    </p>
+                                </div>
+
+                                <div className="space-y-4">
+                                    <div className="flex items-center gap-2">
+                                        <Calendar className="h-4 w-4 text-gray-500" />
+                                        <Label>Relevant Time Period (Day of Year)</Label>
+                                    </div>
+                                    <div className="space-y-4">
+                                        <div className="px-2">
+                                            <Slider
+                                                min={1}
+                                                max={366}
+                                                step={1}
+                                                value={[relevantStartDay, relevantEndDay]}
+                                                onValueChange={(values) => {
+                                                    setRelevantStartDay(values[0]);
+                                                    setRelevantEndDay(values[1]);
+                                                }}
+                                                className="w-full"
+                                            />
+                                        </div>
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div className="space-y-2">
+                                                <Label className="text-sm text-gray-600">Start Day</Label>
+                                                <div className="flex items-center gap-2">
+                                                    <Input
+                                                        type="number"
+                                                        min={1}
+                                                        max={366}
+                                                        value={relevantStartDay}
+                                                        onChange={(e) => {
+                                                            const val = parseInt(e.target.value) || 1;
+                                                            setRelevantStartDay(Math.min(Math.max(val, 1), relevantEndDay));
+                                                        }}
+                                                        className="w-20"
+                                                    />
+                                                    <span className="text-sm text-gray-500">
+                                                        {getDayOfYearLabel(relevantStartDay)}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            <div className="space-y-2">
+                                                <Label className="text-sm text-gray-600">End Day</Label>
+                                                <div className="flex items-center gap-2">
+                                                    <Input
+                                                        type="number"
+                                                        min={1}
+                                                        max={366}
+                                                        value={relevantEndDay}
+                                                        onChange={(e) => {
+                                                            const val = parseInt(e.target.value) || 366;
+                                                            setRelevantEndDay(Math.min(Math.max(val, relevantStartDay), 366));
+                                                        }}
+                                                        className="w-20"
+                                                    />
+                                                    <span className="text-sm text-gray-500">
+                                                        {getDayOfYearLabel(relevantEndDay)}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p className="text-xs text-gray-500">
+                                            Set the time period when this lesson is most relevant during the year (e.g., holidays, seasons)
+                                        </p>
                                     </div>
                                 </div>
                             </CardContent>

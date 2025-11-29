@@ -23,9 +23,17 @@ interface LessonAnalysisResult {
         }>;
     }>;
 }
+import { MAX_TOKENS } from '../constants';
 import { LESSON_ANALYSIS_PROMPT } from '../constants/prompts';
 
-export async function analyzeLessonContent(text: string): Promise<LessonAnalysisResult> {
+export async function analyzeLessonContent(text: string, customPrompt?: string): Promise<LessonAnalysisResult> {
+    // Build the user message with optional custom instructions
+    let userMessage = `Analyze this educational content and extract structured lesson information:\n\n${text}`;
+
+    if (customPrompt && customPrompt.trim()) {
+        userMessage += `\n\n--- Additional Instructions ---\n${customPrompt.trim()}`;
+    }
+
     const response = await fetch(DEEPSEEK_API_URL, {
         method: 'POST',
         headers: {
@@ -41,11 +49,14 @@ export async function analyzeLessonContent(text: string): Promise<LessonAnalysis
                 },
                 {
                     role: 'user',
-                    content: `Analyze this educational content and extract structured lesson information:\n\n${text}`,
+                    content: userMessage,
                 },
             ],
             temperature: 0.3,
-            max_tokens: 4000,
+            max_tokens: MAX_TOKENS,
+            response_format: {
+                type: 'json_object',
+            }
         }),
     });
 

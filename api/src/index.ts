@@ -118,4 +118,68 @@ process.on('unhandledRejection', (reason, promise) => {
     process.exit(1);
 });
 
-export default app;
+app.post('/rpc/delete_lesson', authMiddleware, async (req, res) => {
+    try {
+        const response = await fetch(`${POSTGREST_URL}/rpc/delete_lesson`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(req.body),
+        });
+
+        const data = await response.json();
+        res.status(response.status).json(data);
+    } catch (error) {
+        console.error('[PROTECTED] Error calling PostgREST:', error);
+        res.status(502).json({
+            error: 'PostgREST connection error',
+            message: error instanceof Error ? error.message : 'Unknown error',
+        });
+    }
+});
+
+// Protected endpoints (require authentication and RBAC)
+app.use(
+    '*',
+    authMiddleware,
+    lessonAccessMiddleware,
+    createProxyMiddleware({
+        target: POSTGREST_URL,
+        changeOrigin: true,
+        onProxyReq: (proxyReq, req: express.Request) => {
+            const user = req.user;
+            console.log(`[PROTECTED] ${req.method} ${req.path} - User: ${user?.email} (${user?.role})`);
+
+            // PostgREST requires special header for RPC calls
+            if (req.path.startsWith('/rpc/')) {
+                proxyReq.setHeader('Prefer', 'params=single-object');
+            }
+
+            // Remove Authorization header - don't send tokens to PostgREST
+            proxyReq.removeHeader('Authorization');
+
+            // Add user context to headers for PostgREST instead
+            if (user) {
+                proxyReq.setHeader('X-User-Id', user.user_id);
+                proxyReq.setHeader('X-User-Email', user.email);
+                proxyReq.setHeader('X-User-Role', user.role);
+            }
+        },
+        onError: (err, req, res) => {
+            console.error('[PROTECTED] Proxy Error:', err.message);
+            if (!res.headersSent) {
+                res.status(502).json({
+                    error: 'PostgREST connection error',
+                    message: 'Cannot connect to PostgREST. Make sure it is running on port 3001.',
+                });
+            }
+        },
+    })
+);
+
+app.listen(PORT, () => {
+    console.log(`🚀 Auth Proxy Server running on port ${PORT}`);
+    console.log(`📡 Proxying to PostgREST at ${POSTGREST_URL}`);
+    console.log(`🔒 All requests require authentication except public routes`);
+});

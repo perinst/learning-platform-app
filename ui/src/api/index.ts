@@ -224,17 +224,20 @@ export const lessonsApi = {
                 p_image_url: data.imageUrl,
                 p_applications: (data.applications || []).map(toBackendApplication),
                 p_questions: (data.questions || []).map(toBackendQuestion),
+                p_relevant_start_day: data.relevantStartDay || 1,
+                p_relevant_end_day: data.relevantEndDay || 366,
+                p_grade: data.grade,
             }),
         });
 
-        const result = await handleResponse<{ new_lesson_id: number }[]>(response);
+        const result = await handleResponse<{ lesson_id: number; message: string; success: boolean }>(response);
 
-        if (!result || result.length === 0) {
+        if (!result || !result.success) {
             throw new Error('Failed to create lesson');
         }
 
         // Fetch the created lesson with all content
-        return lessonsApi.getLesson(result[0].new_lesson_id);
+        return lessonsApi.getLesson(result.lesson_id);
     },
 
     updateLesson: async (id: string | number, data: Partial<Lesson>): Promise<Lesson> => {
@@ -262,10 +265,13 @@ export const lessonsApi = {
                 p_image_url: updatedLesson.imageUrl,
                 p_applications: (updatedLesson.applications || []).map(toBackendApplication),
                 p_questions: (updatedLesson.questions || []).map(toBackendQuestion),
+                p_relevant_start_day: updatedLesson.relevantStartDay || 1,
+                p_relevant_end_day: updatedLesson.relevantEndDay || 366,
+                p_grade: updatedLesson.grade,
             }),
         });
 
-        await handleResponse<{ updated_lesson_id: number }[]>(response);
+        await handleResponse<{ lesson_id: number; message: string; success: boolean }>(response);
 
         // Fetch the updated lesson with all content
         return lessonsApi.getLesson(id);
