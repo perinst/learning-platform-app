@@ -1,6 +1,4 @@
-/**
- * User Entity
- */
+// User types
 export interface User {
     user_id: string;
     user_email: string;
@@ -9,20 +7,7 @@ export interface User {
     user_created_at: string;
 }
 
-/**
- * Authenticated User (in request)
- */
-export interface AuthenticatedUser {
-    user_id: string;
-    email: string;
-    name: string;
-    role: string;
-    token_expires_at: string;
-}
-
-/**
- * FreeImage.host Response
- */
+// FreeImage.host response types
 export interface FreeImageResponse {
     status_code: number;
     image?: {
@@ -33,17 +18,3 @@ export interface FreeImageResponse {
         message: string;
     };
 }
-
-/**
- * Upload Result
- */
-export interface UploadResult {
-    success: boolean;
-    url?: string;
-    display_url?: string;
-    error?: string;
-}
-
-// Re-export all types
-export * from './api.types';
-export * from './lesson.types';

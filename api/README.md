@@ -2,51 +2,34 @@
 
 A RESTful API for a learning platform with Express authentication proxy, PostgREST, and PostgreSQL.
 
-## 🌟 NEW: Restructured Architecture
+## 📚 Documentation
 
-The API has been completely restructured with a modern, scalable architecture!
+Complete documentation is in the [`docs`](./docs) folder:
 
-### 🎯 Quick Start
-
--   **[TEAM-SUMMARY.md](./docs/TEAM-SUMMARY.md)** - Executive summary (START HERE)
--   **[IMPLEMENTATION-CHECKLIST.md](./docs/IMPLEMENTATION-CHECKLIST.md)** - Complete checklist
--   **[VISUAL-GUIDE.md](./docs/VISUAL-GUIDE.md)** - Visual diagrams
-
-### 📚 Developer Guides
-
--   **[API-DEVELOPMENT-GUIDE.md](./docs/API-DEVELOPMENT-GUIDE.md)** - How to develop
--   **[QUICK-REFERENCE.md](./docs/QUICK-REFERENCE.md)** - Code snippets
--   **[MIGRATION-GUIDE.md](./docs/MIGRATION-GUIDE.md)** - Migration steps
-
-### 🏗️ Architecture
-
--   **[ARCHITECTURE.md](./docs/ARCHITECTURE.md)** - System architecture
--   **[RESTRUCTURING-SUMMARY.md](./docs/RESTRUCTURING-SUMMARY.md)** - What changed
--   **[BEFORE-AFTER-COMPARISON.md](./docs/BEFORE-AFTER-COMPARISON.md)** - Improvements
-
-### 📖 Original Documentation
-
--   **[Quick Start](./docs/QUICKSTART.md)** - Get started in minutes
--   **[Auth Proxy Guide](./docs/AUTH-PROXY-GUIDE.md)** - Authentication
--   **[RBAC Guide](./docs/RBAC-GUIDE.md)** - Access control
--   **[PostgREST Guide](./docs/POSTGREST-GUIDE.md)** - API reference
+- **[Quick Start](./docs/QUICKSTART.md)** - Get started in minutes
+- **[Dev/Prod Guide](./docs/DEV-PROD-GUIDE.md)** - Development and production workflows
+- **[Architecture Comparison](./docs/ARCHITECTURE-COMPARISON.md)** - Visual comparison
+- **[Auth Proxy Guide](./docs/AUTH-PROXY-GUIDE.md)** - Authentication documentation
+- **[RBAC Guide](./docs/RBAC-GUIDE.md)** - Role-based access control
+- **[PostgREST API Guide](./docs/POSTGREST-GUIDE.md)** - API endpoints reference
+- **[Security Guide](./docs/BLOCKING-POSTGREST.md)** - PostgREST isolation
 
 [📚 View All Documentation](./docs/README.md)
 
 ## Tech Stack
 
--   **TypeScript & Express** - Authentication proxy with RBAC
--   **PostgreSQL** - Database with pgcrypto for password hashing
--   **PostgREST** - Auto-generated REST API from database schema
--   **Docker & Docker Compose** - Containerized deployment
--   **Adminer** - Database management UI
+- **TypeScript & Express** - Authentication proxy with RBAC
+- **PostgreSQL** - Database with pgcrypto for password hashing
+- **PostgREST** - Auto-generated REST API from database schema
+- **Docker & Docker Compose** - Containerized deployment
+- **Adminer** - Database management UI
 
 ## Getting Started
 
 ### Prerequisites
 
--   Docker Desktop installed
--   Node.js 18+ (for local development)
+- Docker Desktop installed
+- Node.js 18+ (for local development)
 
 ### Setup
 
@@ -64,69 +47,69 @@ docker-compose up -d
 
 This will:
 
--   Start PostgreSQL on port 5432
--   Start Adminer (database UI) on port 8080
--   Automatically create the database schema and seed data
+- Start PostgreSQL on port 5432
+- Start Adminer (database UI) on port 8080
+- Automatically create the database schema and seed data
 
 3. Access the database UI
 
--   Open http://localhost:8080 in your browser
--   Login with:
-    -   System: PostgreSQL
-    -   Server: postgres
-    -   Username: postgres
-    -   Password: postgres
-    -   Database: learning_platform
+- Open http://localhost:8080 in your browser
+- Login with:
+    - System: PostgreSQL
+    - Server: postgres
+    - Username: postgres
+    - Password: postgres
+    - Database: learning_platform
 
 ### Database Schema
 
 #### Users
 
--   id (UUID, Primary Key)
--   email (VARCHAR, Unique)
--   password_hash (VARCHAR) - Encrypted with PostgreSQL pgcrypto (bcrypt)
--   name (VARCHAR)
--   role (ENUM: 'user' | 'admin')
--   created_at (TIMESTAMP)
+- id (UUID, Primary Key)
+- email (VARCHAR, Unique)
+- password_hash (VARCHAR) - Encrypted with PostgreSQL pgcrypto (bcrypt)
+- name (VARCHAR)
+- role (ENUM: 'user' | 'admin')
+- created_at (TIMESTAMP)
 
 #### Lessons
 
--   id (UUID, Primary Key)
--   title (VARCHAR)
--   description (TEXT)
--   content (TEXT)
--   category (VARCHAR)
--   status (ENUM: 'draft' | 'published')
--   created_by (UUID, Foreign Key → users.id)
--   created_at (TIMESTAMP)
--   summary (TEXT, Optional)
--   image_url (TEXT, Optional)
+- id (UUID, Primary Key)
+- title (VARCHAR)
+- description (TEXT)
+- content (TEXT)
+- category (VARCHAR)
+- status (ENUM: 'draft' | 'published')
+- created_by (UUID, Foreign Key → users.id)
+- created_at (TIMESTAMP)
+- summary (TEXT, Optional)
+- image_url (TEXT, Optional)
 
 #### Progress
 
--   id (UUID, Primary Key)
--   user_id (UUID, Foreign Key → users.id)
--   lesson_id (UUID, Foreign Key → lessons.id)
--   completed (BOOLEAN)
--   last_accessed (TIMESTAMP)
--   progress (INTEGER, 0-100)
+- id (UUID, Primary Key)
+- user_id (UUID, Foreign Key → users.id)
+- lesson_id (UUID, Foreign Key → lessons.id)
+- completed (BOOLEAN)
+- last_accessed (TIMESTAMP)
+- progress (INTEGER, 0-100)
 
 #### Chat Messages
 
--   id (UUID, Primary Key)
--   user_id (UUID, Foreign Key → users.id)
--   lesson_id (UUID, Foreign Key → lessons.id)
--   role (ENUM: 'user' | 'assistant')
--   content (TEXT)
--   timestamp (TIMESTAMP)
+- id (UUID, Primary Key)
+- user_id (UUID, Foreign Key → users.id)
+- lesson_id (UUID, Foreign Key → lessons.id)
+- role (ENUM: 'user' | 'assistant')
+- content (TEXT)
+- timestamp (TIMESTAMP)
 
 ### Mock Data
 
 The database is seeded with:
 
--   3 users (1 admin, 2 regular users) with bcrypt-hashed passwords
--   6 lessons covering various programming topics
--   Progress data for one user
+- 3 users (1 admin, 2 regular users) with bcrypt-hashed passwords
+- 6 lessons covering various programming topics
+- Progress data for one user
 
 **Test Accounts:**
 | Email | Password | Role |
@@ -139,10 +122,10 @@ The database is seeded with:
 
 This setup uses PostgreSQL's native `pgcrypto` extension with bcrypt hashing:
 
--   ✅ Passwords are hashed with bcrypt (strong, salted, one-way)
--   ✅ No plaintext passwords stored
--   ✅ Verification happens in database
--   ✅ No additional npm packages needed
+- ✅ Passwords are hashed with bcrypt (strong, salted, one-way)
+- ✅ No plaintext passwords stored
+- ✅ Verification happens in database
+- ✅ No additional npm packages needed
 
 **Built-in SQL Functions:**
 
@@ -196,8 +179,8 @@ curl http://localhost:4000/lessons?status=eq.published
 
 **Full API documentation:**
 
--   [POSTGREST-GUIDE.md](POSTGREST-GUIDE.md) - Complete API reference
--   [RBAC-GUIDE.md](RBAC-GUIDE.md) - JWT Authentication & Role-Based Access Control
+- [POSTGREST-GUIDE.md](POSTGREST-GUIDE.md) - Complete API reference
+- [RBAC-GUIDE.md](RBAC-GUIDE.md) - JWT Authentication & Role-Based Access Control
 
 ## 🔐 Authentication & Authorization
 
@@ -231,55 +214,55 @@ See [RBAC-GUIDE.md](RBAC-GUIDE.md) for complete authentication documentation.
 
 ### Authentication (RPC Functions)
 
--   POST `/rpc/verify_login` - Login user
--   POST `/rpc/register_user` - Register new user
--   POST `/rpc/change_password` - Change password
+- POST `/rpc/verify_login` - Login user
+- POST `/rpc/register_user` - Register new user
+- POST `/rpc/change_password` - Change password
 
 ### Users
 
--   GET `/users` - Get all users
--   GET `/users?id=eq.{id}` - Get user by ID
--   PATCH `/users?id=eq.{id}` - Update user
+- GET `/users` - Get all users
+- GET `/users?id=eq.{id}` - Get user by ID
+- PATCH `/users?id=eq.{id}` - Update user
 
 ### Lessons
 
--   GET `/lessons` - Get all lessons
--   GET `/lessons?status=eq.published` - Get published lessons
--   GET `/lessons?id=eq.{id}` - Get lesson by ID
--   POST `/lessons` - Create lesson
--   PATCH `/lessons?id=eq.{id}` - Update lesson
--   DELETE `/lessons?id=eq.{id}` - Delete lesson
+- GET `/lessons` - Get all lessons
+- GET `/lessons?status=eq.published` - Get published lessons
+- GET `/lessons?id=eq.{id}` - Get lesson by ID
+- POST `/lessons` - Create lesson
+- PATCH `/lessons?id=eq.{id}` - Update lesson
+- DELETE `/lessons?id=eq.{id}` - Delete lesson
 
 ### Progress
 
--   GET `/progress?user_id=eq.{userId}` - Get user's progress
--   POST `/progress` - Create/update progress
+- GET `/progress?user_id=eq.{userId}` - Get user's progress
+- POST `/progress` - Create/update progress
 
 ### Chat Messages
 
--   GET `/chat_messages?user_id=eq.{userId}&lesson_id=eq.{lessonId}` - Get chat history
--   POST `/chat_messages` - Send message
+- GET `/chat_messages?user_id=eq.{userId}&lesson_id=eq.{lessonId}` - Get chat history
+- POST `/chat_messages` - Send message
 
 **See [POSTGREST-GUIDE.md](POSTGREST-GUIDE.md) for complete API documentation with examples.**
 
 ### Lessons
 
--   GET `/api/lessons` - Get all published lessons
--   GET `/api/lessons/:id` - Get lesson by ID
--   POST `/api/lessons` - Create lesson (admin only)
--   PUT `/api/lessons/:id` - Update lesson (admin only)
--   DELETE `/api/lessons/:id` - Delete lesson (admin only)
+- GET `/api/lessons` - Get all published lessons
+- GET `/api/lessons/:id` - Get lesson by ID
+- POST `/api/lessons` - Create lesson (admin only)
+- PUT `/api/lessons/:id` - Update lesson (admin only)
+- DELETE `/api/lessons/:id` - Delete lesson (admin only)
 
 ### Progress
 
--   GET `/api/progress/user/:userId` - Get user's progress
--   POST `/api/progress` - Update progress
--   GET `/api/progress/:userId/:lessonId` - Get specific lesson progress
+- GET `/api/progress/user/:userId` - Get user's progress
+- POST `/api/progress` - Update progress
+- GET `/api/progress/:userId/:lessonId` - Get specific lesson progress
 
 ### Chat
 
--   GET `/api/chat/:userId/:lessonId` - Get chat history
--   POST `/api/chat` - Send message
+- GET `/api/chat/:userId/:lessonId` - Get chat history
+- POST `/api/chat` - Send message
 
 ## License
 
