@@ -6,6 +6,7 @@ const allowedOrigins = [
     'https://zlearning.vercel.app',
     'https://ui.sgk.guidestaredu.com',
     'https://api.learning-platform-app.guidestaredu.com',
+    'https://sgk-rit.vercel.app',
 ];
 
 export const corsOptions: CorsOptions = {
