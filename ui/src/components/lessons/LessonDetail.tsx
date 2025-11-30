@@ -247,7 +247,7 @@ export function LessonDetail() {
                                                 <Sparkles className="h-5 w-5 text-blue-600" />
                                                 <h3>AI Summary</h3>
                                             </div>
-                                            <p className="text-gray-700">{lesson.summary}</p>
+                                            <MarkdownRenderer content={lesson.summary} className="text-gray-700" />
                                         </CardContent>
                                     </Card>
                                 )}
