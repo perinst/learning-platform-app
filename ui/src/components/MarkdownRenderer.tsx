@@ -1,6 +1,9 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import remarkBreaks from 'remark-breaks';
+import remarkMath from 'remark-math';
+import rehypeKatex from 'rehype-katex';
+import 'katex/dist/katex.min.css';
 
 interface MarkdownRendererProps {
     content: string;
@@ -11,7 +14,8 @@ export function MarkdownRenderer({ content, className = '' }: MarkdownRendererPr
     return (
         <div className={`prose prose-slate max-w-none ${className}`}>
             <ReactMarkdown
-                remarkPlugins={[remarkGfm, remarkBreaks]}
+                remarkPlugins={[remarkGfm, remarkBreaks, remarkMath]}
+                rehypePlugins={[rehypeKatex]}
                 components={{
                     img: (props) => (
                         <img {...props} className="max-w-full h-auto rounded-lg my-4" alt={props.alt || 'Image'} />
